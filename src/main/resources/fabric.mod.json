@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "cwe",
+	"version": "${version}",
+	"name": "CWE",
+	"description": "A mod to mimic world edit features using pure vanilla commands",
+	"authors": [
+		"CocoPopEater"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/cwe/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"me.cocopopeater.CWE"
+		],
+		"fabric-datagen": [
+			"me.cocopopeater.CWEDataGenerator"
+		],
+		"client": [
+			"me.cocopopeater.CWEClient"
+		]
+	},
+	"mixins": [
+		"cwe.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.21.3",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
