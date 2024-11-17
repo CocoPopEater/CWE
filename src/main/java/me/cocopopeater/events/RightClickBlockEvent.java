@@ -1,0 +1,28 @@
+package me.cocopopeater.events;
+
+import me.cocopopeater.config.ConfigHandler;
+import me.cocopopeater.util.PlayerVariableManager;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.world.World;
+
+public class RightClickBlockEvent {
+    public static void register(){
+        UseBlockCallback.EVENT.register(RightClickBlockEvent::run);
+    }
+
+    public static ActionResult run(PlayerEntity playerEntity, World world, Hand hand, BlockHitResult hitResult){
+        if(!ConfigHandler.getInstance().isEnabled()) return ActionResult.PASS;
+        ActionResult result = ActionResult.PASS;
+
+        if(playerEntity.getMainHandStack().getItem() == Items.WOODEN_AXE){
+            PlayerVariableManager.setPos2(playerEntity, hitResult.getBlockPos());
+            result = ActionResult.FAIL;
+        }
+        return result;
+    }
+}
