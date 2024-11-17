@@ -3,7 +3,6 @@ package me.cocopopeater.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import me.cocopopeater.config.ConfigHandler;
-import me.cocopopeater.regions.CuboidRegion;
 import me.cocopopeater.util.GlobalColorRegistry;
 import me.cocopopeater.util.PlayerUtils;
 import me.cocopopeater.util.PlayerVariableManager;
@@ -25,7 +24,16 @@ public class RegionCopyCommand {
             );
             return 0;
         }
+        if(PlayerVariableManager.getPos1() == null || PlayerVariableManager.getPos2() == null){
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("You need to set the region positions").withColor(GlobalColorRegistry.getBrightRed())
+            );
+            return 0;
+        }
         PlayerVariableManager.saveToClipboard();
+        PlayerUtils.sendPlayerMessageChat(
+                Text.literal("Region copied to clipboard").withColor(GlobalColorRegistry.getLimeGreen())
+        );
         return 1;
     }
 }

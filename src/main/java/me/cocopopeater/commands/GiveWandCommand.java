@@ -24,15 +24,6 @@ public class GiveWandCommand {
             );
             return 0;
         }
-        FabricClientCommandSource source = context.getSource();
-
-        if(!source.hasPermissionLevel(2)){
-            PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("You dont have permission to perform this command")
-                            .withColor(GlobalColorRegistry.getBrightRed())
-            );
-            return 0;
-        }
         PlayerUtils.sendCommandAsPlayer("give %s wooden_axe".formatted(MinecraftClient.getInstance().player.getName().getString()));
         return 1;
     }

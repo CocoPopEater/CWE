@@ -21,6 +21,5 @@ public class CWE implements ModInitializer {
 		// Proceed with mild caution.
 
 		ConfigHandler.getInstance();
-
 	}
 }

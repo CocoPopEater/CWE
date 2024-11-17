@@ -1,6 +1,7 @@
 package me.cocopopeater.regions;
 
 import me.cocopopeater.blocks.SimpleBlockPos;
+import me.cocopopeater.util.BlockUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -25,7 +26,10 @@ public class AdvancedCuboidRegion extends CuboidRegion{
             for(int y = this.minY; y <= this.maxY; y++){
                 for(int z = this.minZ; z <= this.maxZ; z++){
                     currentPos.set(x,y,z);
-                    blocks.put(SimpleBlockPos.fromBlockPos(currentPos.toImmutable()), world.getBlockState(currentPos).toString());
+                    blocks.put(
+                            SimpleBlockPos.fromBlockPos(currentPos.toImmutable()),
+                            BlockUtils.extractBlockDataFromState(world.getBlockState(currentPos).toString())
+                    );
                 }
             }
         }

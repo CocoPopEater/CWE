@@ -32,6 +32,14 @@ public class ReplaceRegionCommand {
             );
             return 0;
         }
+        if(!BlockUtils.canFillBlocks()){
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("You dont have permission to perform this command")
+                            .withColor(GlobalColorRegistry.getBrightRed())
+            );
+            return 0;
+        }
+
         String fromBlock = context.getArgument("fromBlock", String.class);
         String toBlock = context.getArgument("toBlock", String.class);
 

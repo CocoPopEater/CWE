@@ -31,6 +31,13 @@ public class SetRegionCommand {
             );
             return 0;
         }
+        if(!BlockUtils.canFillBlocks()){
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("You dont have permission to perform this command")
+                            .withColor(GlobalColorRegistry.getBrightRed())
+            );
+            return 0;
+        }
         String blockName = context.getArgument("block", String.class);
 
         var blockCheck = BLOCK.getOptionalValue(Identifier.ofVanilla(blockName));

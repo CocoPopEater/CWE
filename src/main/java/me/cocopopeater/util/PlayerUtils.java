@@ -13,7 +13,7 @@ public class PlayerUtils {
         MinecraftClient.getInstance().player.sendMessage(msg, true);
     }
 
-    public static void sendCommandAsPlayer(String command){
-        MinecraftClient.getInstance().getNetworkHandler().sendCommand(command);
+    public static boolean sendCommandAsPlayer(String command){
+        return MinecraftClient.getInstance().getNetworkHandler().sendCommand(command);
     }
 }

@@ -4,10 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import me.cocopopeater.config.ConfigHandler;
 import me.cocopopeater.regions.ClipboardRegion;
-import me.cocopopeater.util.GlobalColorRegistry;
-import me.cocopopeater.util.PlayerUtils;
-import me.cocopopeater.util.PlayerVariableManager;
-import me.cocopopeater.util.TimedCommandRunner;
+import me.cocopopeater.util.*;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
@@ -18,7 +15,8 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.lit
 
 public class RegionPasteCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess) {
-        dispatcher.register(literal("/paste").executes(RegionPasteCommand::run));
+        dispatcher.register(literal("/paste")
+                .executes(RegionPasteCommand::run));
     }
 
     public static int run(CommandContext<FabricClientCommandSource> context){
@@ -30,7 +28,9 @@ public class RegionPasteCommand {
         }
         FabricClientCommandSource source = context.getSource();
 
-        if(!source.hasPermissionLevel(2)){
+
+
+        if(!BlockUtils.canSetBlocks()){
             PlayerUtils.sendPlayerMessageChat(
                     Text.literal("You dont have permission to perform this command")
                             .withColor(GlobalColorRegistry.getBrightRed())

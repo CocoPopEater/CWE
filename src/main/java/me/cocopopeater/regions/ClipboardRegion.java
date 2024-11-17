@@ -52,15 +52,20 @@ public class ClipboardRegion extends AdvancedCuboidRegion{
 
         for(Map.Entry<SimpleBlockPos, String> entry : orderedCoords){
             SimpleBlockPos pos = entry.getKey();
-            String state = this.blocks.get(pos); // this retrieves the saved blockstate, pos being the offset from player
+            String state = this.blocks.get(pos); // this retrieves the saved blockstate, pos being the offset relative to player position at copy point
             BlockPos newPos = player.getBlockPos().add(pos.getX(), pos.getY(), pos.getZ());
 
-            if(playerWorld.getBlockState(newPos).equals(state)) continue; // If the block is already correct, ignore it
+            if(BlockUtils.extractBlockDataFromState(playerWorld.getBlockState(newPos).toString()).equals(state)) continue; // If the block is already correct, ignore it
 
-            String block = BlockUtils.extractBlockDataFromState(state);
-            String command = String.format(baseSetBlockCommand, newPos.getX(), newPos.getY(), newPos.getZ(), block);
+            String command = String.format(baseSetBlockCommand, newPos.getX(), newPos.getY(), newPos.getZ(), state);
             commands.add(command);
         }
+
+        commands.sort((a,b) -> {
+            boolean aContainsAir = a.contains("air");
+            boolean bContainsAir = b.contains(" air");
+            return Boolean.compare(bContainsAir, aContainsAir);
+        });
 
         return commands;
     }
