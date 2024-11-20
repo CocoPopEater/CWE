@@ -17,7 +17,6 @@ public class BlockZone extends Zone{
     }
 
 
-
     public ArrayList<BlockZone> subdivide() {
         ArrayList<BlockZone> subRegions = new ArrayList<>();
 

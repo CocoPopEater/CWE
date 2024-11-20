@@ -16,6 +16,13 @@ public class AdvancedCuboidRegion extends CuboidRegion{
         loadRegionBlocks(world);
     }
 
+    public AdvancedCuboidRegion(SimpleBlockPos pos1, SimpleBlockPos pos2) {
+        super(
+                new BlockPos(pos1.x(), pos1.y(), pos1.z()),
+                new BlockPos(pos2.x(), pos2.y(), pos2.z())
+                );
+    }
+
     public Map<SimpleBlockPos, String> getBlockMap(){
         return this.blocks;
     }
