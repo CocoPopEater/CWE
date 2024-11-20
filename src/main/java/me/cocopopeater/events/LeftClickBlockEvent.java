@@ -1,7 +1,7 @@
 package me.cocopopeater.events;
 
 import me.cocopopeater.config.ConfigHandler;
-import me.cocopopeater.util.PlayerVariableManager;
+import me.cocopopeater.util.varmanagers.PlayerVariableManager;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;

@@ -4,17 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import me.cocopopeater.blocks.SimpleBlockPos;
-import me.cocopopeater.gsonadapters.SimpleBlockPosAdapter;
+import me.cocopopeater.util.gsonadapters.SimpleBlockPosAdapter;
 import me.cocopopeater.regions.ClipboardRegion;
-import me.cocopopeater.util.GlobalColorRegistry;
+import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import me.cocopopeater.util.PlayerUtils;
-import me.cocopopeater.util.PlayerVariableManager;
+import me.cocopopeater.util.varmanagers.PlayerVariableManager;
 import net.minecraft.text.Text;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
@@ -58,7 +56,7 @@ public class FileManager {
             File[] files = file.listFiles();
             if (files != null) {
                 for (File f : files) {
-                    fileNames.add(f.getName().replace(".json", ""));
+                    fileNames.add(f.getName().replace(".cschem", ""));
                 }
             }
         } catch (SecurityException e) {
@@ -149,7 +147,6 @@ public class FileManager {
             );
         }
         return region;
-
     }
 
     public static byte[] compress(String data) throws Exception {

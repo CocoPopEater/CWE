@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import me.cocopopeater.config.ConfigHandler;
 import me.cocopopeater.util.*;
+import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;

@@ -3,7 +3,7 @@ package me.cocopopeater.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import me.cocopopeater.config.ConfigHandler;
-import me.cocopopeater.util.GlobalColorRegistry;
+import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import me.cocopopeater.util.PlayerUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;

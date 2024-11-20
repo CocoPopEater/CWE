@@ -1,4 +1,4 @@
-package me.cocopopeater.util;
+package me.cocopopeater.util.varmanagers;
 
 public class GlobalColorRegistry {
 

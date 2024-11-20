@@ -2,7 +2,6 @@ package me.cocopopeater.regions;
 
 import me.cocopopeater.blocks.SimpleBlockPos;
 import me.cocopopeater.util.BlockUtils;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -24,9 +23,9 @@ public class ClipboardRegion extends AdvancedCuboidRegion{
         for(SimpleBlockPos pos : this.blocks.keySet()){
             String state = this.blocks.get(pos);
 
-            int offsetX = pos.getX() - this.startPos.getX();
-            int offsetY = pos.getY() - this.startPos.getY();
-            int offsetZ = pos.getZ() - this.startPos.getZ();
+            int offsetX = pos.x() - this.startPos.getX();
+            int offsetY = pos.y() - this.startPos.getY();
+            int offsetZ = pos.z() - this.startPos.getZ();
 
             BlockPos newPos = new BlockPos(offsetX, offsetY, offsetZ);
             newBlocks.put(SimpleBlockPos.fromBlockPos(newPos), state);
@@ -45,15 +44,15 @@ public class ClipboardRegion extends AdvancedCuboidRegion{
 
         List<Map.Entry<SimpleBlockPos, String>> orderedCoords = this.blocks.entrySet()
                 .stream()
-                .sorted(Comparator.comparing(es -> es.getKey().getZ()))
-                .sorted(Comparator.comparing(es -> es.getKey().getX()))
-                .sorted(Comparator.comparing(es -> es.getKey().getY()))
+                .sorted(Comparator.comparing(es -> es.getKey().z()))
+                .sorted(Comparator.comparing(es -> es.getKey().x()))
+                .sorted(Comparator.comparing(es -> es.getKey().y()))
                 .toList();
 
         for(Map.Entry<SimpleBlockPos, String> entry : orderedCoords){
             SimpleBlockPos pos = entry.getKey();
             String state = this.blocks.get(pos); // this retrieves the saved blockstate, pos being the offset relative to player position at copy point
-            BlockPos newPos = player.getBlockPos().add(pos.getX(), pos.getY(), pos.getZ());
+            BlockPos newPos = player.getBlockPos().add(pos.x(), pos.y(), pos.z());
 
             if(BlockUtils.extractBlockDataFromState(playerWorld.getBlockState(newPos).toString()).equals(state)) continue; // If the block is already correct, ignore it
 

@@ -1,5 +1,7 @@
-package me.cocopopeater.util;
+package me.cocopopeater.util.tasks;
 
+import me.cocopopeater.util.PlayerUtils;
+import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import net.minecraft.text.Text;
 
 import java.util.LinkedList;

@@ -1,16 +1,12 @@
-package me.cocopopeater.util;
+package me.cocopopeater.util.varmanagers;
 
-import me.cocopopeater.regions.AdvancedCuboidRegion;
 import me.cocopopeater.regions.ClipboardRegion;
 import me.cocopopeater.regions.CuboidRegion;
-import net.minecraft.block.BlockState;
+import me.cocopopeater.util.PlayerUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-
-import javax.sound.sampled.Clip;
-import java.util.HashMap;
 
 public class PlayerVariableManager {
 

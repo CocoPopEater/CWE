@@ -1,6 +1,7 @@
 package me.cocopopeater.regions;
 
 import me.cocopopeater.util.PlayerUtils;
+import me.cocopopeater.util.varmanagers.GlobalVariableManager;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
@@ -35,11 +36,10 @@ public class CuboidRegion {
 
 
     public ArrayList<CuboidRegion> separateRegion() {
-        int maxVolume = 32000;
         ArrayList<CuboidRegion> subRegions = new ArrayList<>();
 
         int totalVolume = getTotalBlocks();
-        if (totalVolume <= maxVolume) {
+        if (totalVolume <= GlobalVariableManager.MAX_BLOCKS) {
             subRegions.add(this);
             return subRegions;
         }
@@ -50,9 +50,9 @@ public class CuboidRegion {
 
 
 
-        int splitX = (int) Math.ceil(regionX / Math.cbrt(maxVolume));
-        int splitY = (int) Math.ceil(regionY / Math.cbrt(maxVolume));
-        int splitZ = (int) Math.ceil(regionZ / Math.cbrt(maxVolume));
+        int splitX = (int) Math.ceil(regionX / Math.cbrt(GlobalVariableManager.MAX_BLOCKS));
+        int splitY = (int) Math.ceil(regionY / Math.cbrt(GlobalVariableManager.MAX_BLOCKS));
+        int splitZ = (int) Math.ceil(regionZ / Math.cbrt(GlobalVariableManager.MAX_BLOCKS));
 
         int stepX = (int) Math.ceil((double) regionX / splitX);
         int stepY = (int) Math.ceil((double) regionY / splitY);

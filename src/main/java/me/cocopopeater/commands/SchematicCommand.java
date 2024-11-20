@@ -8,14 +8,15 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import me.cocopopeater.config.ConfigHandler;
 import me.cocopopeater.config.FileManager;
 import me.cocopopeater.regions.ClipboardRegion;
-import me.cocopopeater.util.GlobalColorRegistry;
+import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import me.cocopopeater.util.PlayerUtils;
-import me.cocopopeater.util.PlayerVariableManager;
+import me.cocopopeater.util.varmanagers.PlayerVariableManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
@@ -95,14 +96,21 @@ public class SchematicCommand {
                     return 0;
                 }
                 ClipboardRegion region = PlayerVariableManager.createClipboardRegion();
-                FileManager.saveSchematic(region, schematicName);
+                CompletableFuture.runAsync(() -> {
+                    FileManager.saveSchematic(region, schematicName);
+                });
+
                 return 1;
             } else if(option.equalsIgnoreCase("load")){
-                ClipboardRegion region = FileManager.loadSchematic(schematicName);
-                if(region == null){
-                    return 0;
-                }
-                PlayerVariableManager.setClipboardRegion(region);
+                CompletableFuture<ClipboardRegion> future = CompletableFuture.supplyAsync(() -> FileManager.loadSchematic(schematicName));
+                future.thenAccept(region -> {
+                    if(region == null){
+                        PlayerUtils.sendPlayerMessageChat(
+                                Text.literal("Invalid schematic").withColor(GlobalColorRegistry.getBrightRed())
+                        );
+                    }
+                });
+
             }else{
                 PlayerUtils.sendPlayerMessageChat(
                         Text.literal("Unknown argument: %s".formatted(option)).withColor(GlobalColorRegistry.getBrightRed())

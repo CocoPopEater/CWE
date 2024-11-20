@@ -1,4 +1,4 @@
-package me.cocopopeater.gsonadapters;
+package me.cocopopeater.util.gsonadapters;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -10,7 +10,7 @@ import java.io.IOException;
 public class SimpleBlockPosAdapter extends TypeAdapter<SimpleBlockPos> {
     @Override
     public void write(JsonWriter out, SimpleBlockPos pos) throws IOException {
-        out.value(String.format("{x:%d,y:%d,z:%d}", pos.getX(), pos.getY(), pos.getZ()));
+        out.value(String.format("{x:%d,y:%d,z:%d}", pos.x(), pos.y(), pos.z()));
     }
 
     @Override
