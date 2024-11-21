@@ -1,6 +1,7 @@
 package me.cocopopeater.util;
 
 import me.cocopopeater.blocks.SimpleBlockPos;
+import me.cocopopeater.util.varmanagers.GlobalVariableManager;
 import net.minecraft.util.math.BlockPos;
 
 public class MathHelper {
@@ -29,4 +30,13 @@ public class MathHelper {
         int maxZ = Math.max(pos1.z(), pos2.z());
         return getTotalVolume(minX, minY, minZ, maxX, maxY, maxZ);
     }
+
+    public static boolean isOverBlockLimit(BlockPos pos1, BlockPos pos2){
+        return getTotalVolume(pos1, pos2) < GlobalVariableManager.MAX_BLOCKS;
+    }
+
+    public static boolean isOverBlockLimit(SimpleBlockPos pos1, SimpleBlockPos pos2){
+        return getTotalVolume(pos1, pos2) < GlobalVariableManager.MAX_BLOCKS;
+    }
+
 }
