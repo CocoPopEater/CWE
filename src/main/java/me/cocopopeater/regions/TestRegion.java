@@ -1,7 +1,9 @@
 package me.cocopopeater.regions;
 
 import me.cocopopeater.blocks.SimpleBlockPos;
+import me.cocopopeater.util.BlockUtils;
 import me.cocopopeater.util.MathHelper;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -34,24 +36,24 @@ public class TestRegion extends AdvancedCuboidRegion {
 
     public List<String> generateFillCommands(){
         // testing method for greedy meshing-esque algo
-
         ArrayList<String> commands = new ArrayList<>();
+
+        World world = MinecraftClient.getInstance().player.getWorld();
 
         BlockPos.Mutable start = new BlockPos.Mutable();
         BlockPos.Mutable end = new BlockPos.Mutable();
+        String currentBlockData = "";
 
         start.set(this.minX, this.minY, this.minZ);
         end.set(this.minX, this.minY, this.minZ);
 
         for(int x = this.minX; x <= this.maxX; x++){
+            currentBlockData = BlockUtils.extractBlockDataFromState(world.getBlockState(end).toString());
             // first figure out if the next block is identical
-            // second figure out if it should increase in size
+            // we are assuming the check
             end.setX(x);
-            if(!(MathHelper.isOverBlockLimit(start, end))){
-                end.setX(x-1);
-                x--;
 
-            }
+            // second figure out if it should increase in size
 
         }
         return commands;
