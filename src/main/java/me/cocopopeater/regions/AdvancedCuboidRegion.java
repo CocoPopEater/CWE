@@ -35,7 +35,8 @@ public class AdvancedCuboidRegion extends CuboidRegion{
                     currentPos.set(x,y,z);
                     blocks.put(
                             SimpleBlockPos.fromBlockPos(currentPos.toImmutable()),
-                            BlockUtils.extractBlockDataFromState(world.getBlockState(currentPos).toString())
+                            BlockUtils.extractBlockData(world, currentPos)
+                            //BlockUtils.extractBlockDataFromState(world.getBlockState(currentPos).toString())
                     );
                 }
             }

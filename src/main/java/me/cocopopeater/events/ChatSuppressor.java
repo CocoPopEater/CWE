@@ -14,15 +14,16 @@ public class ChatSuppressor {
     static {
         // https://gist.github.com/sppmacd/82af47c83b225d4ffd33bb0c27b0d932
         messageKeysToHide.add("commands.setblock.failed");
+        messageKeysToHide.add("commands.setblock.success");
         messageKeysToHide.add("commands.fill.failed");
+        messageKeysToHide.add("commands.fill.success");
     }
 
     public static void register(){
 
         ClientReceiveMessageEvents.ALLOW_GAME.register((text, b) -> {
             for(String key : messageKeysToHide){
-                System.out.println("Checking key: %s".formatted(key));
-                if(text.getString().contains(I18n.translate(key))){
+                if(text.getString().contains(I18n.translate(key).replaceAll("%s", "").replaceAll(",", "").trim())){
                     return false;
                 }
             }

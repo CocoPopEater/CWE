@@ -2,7 +2,6 @@ package me.cocopopeater.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import me.cocopopeater.util.BlockUtils;
 import me.cocopopeater.util.PlayerUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
@@ -16,9 +15,9 @@ public class TestCommand {
                 .executes(TestCommand::run));
     }
 
-    private static int run(CommandContext<FabricClientCommandSource> fabricClientCommandSourceCommandContext) {
+    private static int run(CommandContext<FabricClientCommandSource> context) {
         PlayerUtils.sendPlayerMessageChat(
-                Text.literal(String.valueOf(BlockUtils.canSetBlocks()))
+                Text.literal("Placeholder")
         );
         return 1;
     }

@@ -54,7 +54,8 @@ public class ClipboardRegion extends AdvancedCuboidRegion{
             String state = this.blocks.get(pos); // this retrieves the saved blockstate, pos being the offset relative to player position at copy point
             BlockPos newPos = player.getBlockPos().add(pos.x(), pos.y(), pos.z());
 
-            if(BlockUtils.extractBlockDataFromState(playerWorld.getBlockState(newPos).toString()).equals(state)) continue; // If the block is already correct, ignore it
+            //if(BlockUtils.extractBlockDataFromState(playerWorld.getBlockState(newPos).toString()).equals(state)) continue; // If the block is already correct, ignore it
+            if(BlockUtils.extractBlockData(playerWorld, newPos).equals(state)) continue; // If the block is already correct, ignore it
 
             String command = String.format(baseSetBlockCommand, newPos.getX(), newPos.getY(), newPos.getZ(), state);
             commands.add(command);

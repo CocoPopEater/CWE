@@ -50,7 +50,9 @@ public class RegionPasteCommand {
         }
         TimedCommandRunner runner = new TimedCommandRunner();
         for(String command : clipboardRegion.getPasteCommandList()){
-            runner.addTask(() -> PlayerUtils.sendCommandAsPlayer(command));
+            runner.addTask(() -> {
+                PlayerUtils.sendCommandAsPlayer(command);
+            });
         }
 
         runner.start(ConfigHandler.getInstance().getCommandDelay(), TimeUnit.MILLISECONDS);

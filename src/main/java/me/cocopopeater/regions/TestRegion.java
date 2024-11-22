@@ -43,17 +43,32 @@ public class TestRegion extends AdvancedCuboidRegion {
         BlockPos.Mutable start = new BlockPos.Mutable();
         BlockPos.Mutable end = new BlockPos.Mutable();
         String currentBlockData = "";
+        String nextBlockData = "";
 
         start.set(this.minX, this.minY, this.minZ);
         end.set(this.minX, this.minY, this.minZ);
 
-        for(int x = this.minX; x <= this.maxX; x++){
-            currentBlockData = BlockUtils.extractBlockDataFromState(world.getBlockState(end).toString());
-            // first figure out if the next block is identical
-            // we are assuming the check
-            end.setX(x);
 
-            // second figure out if it should increase in size
+
+
+        for(int y = this.minY; y <= this.maxY; y++){
+            for(int x = this.minX; x <= this.maxX; x++){
+                for(int z = this.minZ; z <= this.maxZ; z++){
+                    end.set(x,y,z);
+                    // first figure out if the next block is identical
+                    currentBlockData = BlockUtils.extractBlockData(world, end); // block data for the current world state
+                    if(currentBlockData.equals(previousBlockData)){
+                        // this means the current and previous blocks are identical and can be grouped together
+                        // need to check block count and store processed positions
+                        // maybe use some other util class?
+
+                    }
+
+
+                }
+            }
+
+
 
         }
         return commands;
