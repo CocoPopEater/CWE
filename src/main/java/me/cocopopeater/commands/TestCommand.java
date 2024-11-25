@@ -35,7 +35,7 @@ public class TestCommand {
                     SimpleBlockPos.fromBlockPos(context.getSource().getClient().player.getBlockPos())
             );
         }).thenAccept(testRegion -> {
-            FileManager.saveTestRegion(testRegion, "Test_Region");
+            FileManager.saveTestRegion(testRegion, "Test_Region", false);
         });
 
         PlayerUtils.sendPlayerMessageChat(
@@ -47,7 +47,7 @@ public class TestCommand {
     private static int runPrint(CommandContext<FabricClientCommandSource> context){
 
         CompletableFuture.runAsync(() -> {
-            TestRegion region = FileManager.loadTestRegion("Test_Region");
+            TestRegion region = FileManager.loadTestRegion("Test_Region", false);
 
             TimedCommandRunner runner = new TimedCommandRunner();
             for(String command : region.generateFillCommands(SimpleBlockPos.fromBlockPos(context.getSource().getClient().player.getBlockPos()))){

@@ -75,6 +75,7 @@ public class TestRegion extends CuboidRegion {
     public List<BlockZone> generateZones(World world) {
 
         // this doesnt work, rewrite it
+        // issue on saving
         ArrayList<BlockZone> zones = new ArrayList<>();
         Map<SimpleBlockPos, String> blockDataMap = new HashMap<>();
         Set<SimpleBlockPos> visited = new HashSet<>();

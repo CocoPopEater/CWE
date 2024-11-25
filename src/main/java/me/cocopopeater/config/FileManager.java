@@ -14,6 +14,8 @@ import net.minecraft.text.Text;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
@@ -171,7 +173,7 @@ public class FileManager {
         }
     }
 
-    public static TestRegion loadTestRegion(String schematicName){
+    public static TestRegion loadTestRegion(String schematicName, boolean compressed){
         File file = new File("%s/%s.cschem".formatted(SCHEMATIC_DIRECTORY, schematicName));
         if(!file.exists()){
             PlayerUtils.sendPlayerMessageChat(
@@ -182,34 +184,50 @@ public class FileManager {
         }
 
         TestRegion region = null;
-        byte[] data;
-        try(FileInputStream fileInputStream = new FileInputStream("%s/%s.cschem".formatted(SCHEMATIC_DIRECTORY, schematicName))){
-            data = fileInputStream.readAllBytes();
 
-            Type regType = new TypeToken<TestRegion>() {}.getType();
-            String decomp = decompress(data);
-            region = gson.fromJson(decomp, regType);
+        if(compressed){
+            byte[] data;
+            try(FileInputStream fileInputStream = new FileInputStream("%s/%s.cschem".formatted(SCHEMATIC_DIRECTORY, schematicName))){
+                data = fileInputStream.readAllBytes();
 
-            PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Successfully loaded schematic: %s".formatted(schematicName))
-                            .withColor(GlobalColorRegistry.getLimeGreen())
-            );
-        } catch (IOException e) {
-            PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("IOE: Unable to load schematic: %s".formatted(schematicName))
-                            .withColor(GlobalColorRegistry.getBrightRed())
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("E: Unable to load schematic: %s".formatted(schematicName))
-                            .withColor(GlobalColorRegistry.getBrightRed())
-            );
+                Type regType = new TypeToken<TestRegion>() {}.getType();
+                String decomp = decompress(data);
+                region = gson.fromJson(decomp, regType);
+
+                PlayerUtils.sendPlayerMessageChat(
+                        Text.literal("Successfully loaded schematic: %s".formatted(schematicName))
+                                .withColor(GlobalColorRegistry.getLimeGreen())
+                );
+            } catch (IOException e) {
+                PlayerUtils.sendPlayerMessageChat(
+                        Text.literal("IOE: Unable to load schematic: %s".formatted(schematicName))
+                                .withColor(GlobalColorRegistry.getBrightRed())
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+                PlayerUtils.sendPlayerMessageChat(
+                        Text.literal("E: Unable to load schematic: %s".formatted(schematicName))
+                                .withColor(GlobalColorRegistry.getBrightRed())
+                );
+            }
+        }else{
+            try(Reader fileInputStream = new FileReader("%s/%s.cschem".formatted(SCHEMATIC_DIRECTORY, schematicName))) {
+                Type regType = new TypeToken<TestRegion>() {}.getType();
+                region = gson.fromJson(fileInputStream, regType);
+
+                PlayerUtils.sendPlayerMessageChat(
+                        Text.literal("Successfully loaded schematic: %s".formatted(schematicName))
+                                .withColor(GlobalColorRegistry.getLimeGreen())
+                );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+
         return region;
     }
 
-    public static void saveTestRegion(TestRegion region, String schematicName){
+    public static void saveTestRegion(TestRegion region, String schematicName, boolean shouldCompress){
         if(region == null){
             PlayerUtils.sendPlayerMessageChat(
                     Text.literal("Unable to save schematic: %s".formatted(schematicName))
@@ -228,26 +246,48 @@ public class FileManager {
             return;
         }
 
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file)){
-            String data = gson.toJson(region);
-            byte[] compressed = compress(data);
-            fileOutputStream.write(compressed);
-            //gson.toJson(region, writer);
-            PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Region saved as: %s".formatted(schematicName))
-                            .withColor(GlobalColorRegistry.getLimeGreen())
-            );
-        }catch(IOException e){
-            PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unable to save schematic: %s".formatted(schematicName))
-                            .withColor(GlobalColorRegistry.getBrightRed())
-            );
-        } catch (Exception e) {
-            PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unable to save schematic: %s".formatted(schematicName))
-                            .withColor(GlobalColorRegistry.getBrightRed())
-            );
+        if(shouldCompress){
+            try (FileOutputStream fileOutputStream = new FileOutputStream(file)){
+                String data = gson.toJson(region);
+                byte[] compressed = compress(data);
+                fileOutputStream.write(compressed);
+                //gson.toJson(region, writer);
+                PlayerUtils.sendPlayerMessageChat(
+                        Text.literal("Region saved as: %s".formatted(schematicName))
+                                .withColor(GlobalColorRegistry.getLimeGreen())
+                );
+            }catch(IOException e){
+                PlayerUtils.sendPlayerMessageChat(
+                        Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                                .withColor(GlobalColorRegistry.getBrightRed())
+                );
+            } catch (Exception e) {
+                PlayerUtils.sendPlayerMessageChat(
+                        Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                                .withColor(GlobalColorRegistry.getBrightRed())
+                );
+            }
+        }else{
+            try (FileWriter fileOutputStream = new FileWriter(file)){
+                gson.toJson(region, fileOutputStream);
+                PlayerUtils.sendPlayerMessageChat(
+                        Text.literal("Region saved as: %s".formatted(schematicName))
+                                .withColor(GlobalColorRegistry.getLimeGreen())
+                );
+            }catch(IOException e){
+                PlayerUtils.sendPlayerMessageChat(
+                        Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                                .withColor(GlobalColorRegistry.getBrightRed())
+                );
+            } catch (Exception e) {
+                PlayerUtils.sendPlayerMessageChat(
+                        Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                                .withColor(GlobalColorRegistry.getBrightRed())
+                );
+            }
         }
+
+
     }
 
 
