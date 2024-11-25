@@ -2,6 +2,10 @@ package me.cocopopeater.blocks;
 
 import me.cocopopeater.util.MathHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 public class Zone {
 
     public final SimpleBlockPos point1;
@@ -30,6 +34,28 @@ public class Zone {
 
     public int getTotalVolume(){
         return MathHelper.getTotalVolume(point1, point2);
+    }
+
+    public void markZonePoints(Set<SimpleBlockPos> storageSet){
+        for(int x = this.getMinPos().x(); x <= this.getMaxPos().x(); x++){
+            for(int y = this.getMinPos().y(); y <= this.getMaxPos().y(); y++){
+                for(int z = this.getMinPos().z(); z <= this.getMaxPos().z(); z++){
+                    storageSet.add(new SimpleBlockPos(x,y,z));
+                }
+            }
+        }
+    }
+
+    public List<SimpleBlockPos> getAllPoints(){
+        ArrayList<SimpleBlockPos> positions = new ArrayList<>();
+        for(int x = this.getMinPos().x(); x <= this.getMaxPos().x(); x++){
+            for(int y = this.getMinPos().y(); y <= this.getMaxPos().y(); y++){
+                for(int z = this.getMinPos().z(); z <= this.getMaxPos().z(); z++){
+                    positions.add(new SimpleBlockPos(x,y,z));
+                }
+            }
+        }
+        return positions;
     }
 
     @Override

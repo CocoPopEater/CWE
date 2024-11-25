@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import me.cocopopeater.blocks.SimpleBlockPos;
+import me.cocopopeater.blocks.TestRegion;
 import me.cocopopeater.util.gsonadapters.SimpleBlockPosAdapter;
 import me.cocopopeater.regions.ClipboardRegion;
 import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
@@ -169,4 +170,85 @@ public class FileManager {
             return new String(byteArrayOutputStream.toByteArray());
         }
     }
+
+    public static TestRegion loadTestRegion(String schematicName){
+        File file = new File("%s/%s.cschem".formatted(SCHEMATIC_DIRECTORY, schematicName));
+        if(!file.exists()){
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("FNE: Unable to load schematic: %s from path: %s".formatted(schematicName, file.getPath()))
+                            .withColor(GlobalColorRegistry.getBrightRed())
+            );
+            return null;
+        }
+
+        TestRegion region = null;
+        byte[] data;
+        try(FileInputStream fileInputStream = new FileInputStream("%s/%s.cschem".formatted(SCHEMATIC_DIRECTORY, schematicName))){
+            data = fileInputStream.readAllBytes();
+
+            Type regType = new TypeToken<TestRegion>() {}.getType();
+            String decomp = decompress(data);
+            region = gson.fromJson(decomp, regType);
+
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("Successfully loaded schematic: %s".formatted(schematicName))
+                            .withColor(GlobalColorRegistry.getLimeGreen())
+            );
+        } catch (IOException e) {
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("IOE: Unable to load schematic: %s".formatted(schematicName))
+                            .withColor(GlobalColorRegistry.getBrightRed())
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("E: Unable to load schematic: %s".formatted(schematicName))
+                            .withColor(GlobalColorRegistry.getBrightRed())
+            );
+        }
+        return region;
+    }
+
+    public static void saveTestRegion(TestRegion region, String schematicName){
+        if(region == null){
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                            .withColor(GlobalColorRegistry.getBrightRed())
+            );
+            return;
+        }
+
+        File file = new File("%s/%s.cschem".formatted(SCHEMATIC_DIRECTORY, schematicName));
+
+        if(!ensureFileExists(file)){
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                            .withColor(GlobalColorRegistry.getBrightRed())
+            );
+            return;
+        }
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file)){
+            String data = gson.toJson(region);
+            byte[] compressed = compress(data);
+            fileOutputStream.write(compressed);
+            //gson.toJson(region, writer);
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("Region saved as: %s".formatted(schematicName))
+                            .withColor(GlobalColorRegistry.getLimeGreen())
+            );
+        }catch(IOException e){
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                            .withColor(GlobalColorRegistry.getBrightRed())
+            );
+        } catch (Exception e) {
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                            .withColor(GlobalColorRegistry.getBrightRed())
+            );
+        }
+    }
+
+
 }

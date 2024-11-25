@@ -23,6 +23,9 @@ public class ChatSuppressor {
 
         ClientReceiveMessageEvents.ALLOW_GAME.register((text, b) -> {
             for(String key : messageKeysToHide){
+                if(text.getString().equals(I18n.translate(key))){
+                    return false;
+                }
                 if(text.getString().contains(I18n.translate(key).replaceAll("%s", "").replaceAll(",", "").trim())){
                     return false;
                 }

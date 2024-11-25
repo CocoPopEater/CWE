@@ -15,11 +15,11 @@ public class CuboidRegion {
     protected int maxY;
     protected int maxZ;
 
-    public BlockPos getMinPos(){
+    public BlockPos getMin(){
         return new BlockPos(minX, minY, minZ);
     }
 
-    public BlockPos getMaxPos(){
+    public BlockPos getMax(){
         return new BlockPos(maxX, maxY, maxZ);
     }
 
