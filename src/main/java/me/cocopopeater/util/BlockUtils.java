@@ -1,7 +1,10 @@
 package me.cocopopeater.util;
 
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.SignBlockEntity;
+import net.minecraft.block.entity.SignText;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -36,21 +39,62 @@ public class BlockUtils {
                     }
 
                 }
+            }else if(matcher.group(1).contains("sign")){
+                BlockEntity blockEntity = world.getBlockEntity(pos);
+                if(!(blockEntity instanceof SignBlockEntity signBlockEntity)) return sb.toString();
+
+                sb.append('{');
+                if(signBlockEntity.isWaxed()) sb.append("is_waxed:1b,");
+
+
+                sb.append("front_text:{");
+                SignText front = signBlockEntity.getFrontText();
+                if(front.isGlowing()) sb.append("has_glowing_text:1b,");
+                sb.append("color:\"%s\",".formatted(front.getColor().asString()));
+
+                sb.append("messages:["); // ']}
+                int index = 0;
+
+                // oak_sign{front_text:{messages:['["Line1"]','[" "]','[""]','[""]']}}
+                for(Text text : front.getMessages(false)){
+                    System.out.println(text.getString());
+                    sb.append("'[\"%s\"]'".formatted(text.getString())); // adds the string surrounded by [""] example: ["Line1"]
+                    if(!(index == 3)){
+                        // inside this if means it isn't the last line
+                        sb.append(',');
+                    }else{
+                        // inside this if means it is the last line
+                        // we should close the messages  section
+                        sb.append("]}");
+                    }
+                    index++;
+                }
+
+                sb.append(",back_text:{");
+                SignText back = signBlockEntity.getBackText();
+                if(back.isGlowing()) sb.append("has_glowing_text:1b,");
+                sb.append("color:\"%s\",".formatted(back.getColor().asString()));
+
+                sb.append("messages:["); // ']}
+                index = 0;
+
+                // oak_sign{front_text:{messages:['["Line1"]','[" "]','[""]','[""]']}}
+                for(Text text : back.getMessages(false)){
+                    System.out.println(text.getString());
+                    sb.append("'[\"%s\"]'".formatted(text.getString())); // adds the string surrounded by [""] example: ["Line1"]
+                    if(!(index == 3)){
+                        // inside this if means it isn't the last line
+                        sb.append(',');
+                    }else{
+                        // inside this if means it is the last line
+                        // we should close the messages  section
+                        sb.append("]}");
+                    }
+                    index++;
+                }
+
+                sb.append('}');
             }
-        }
-
-        return sb.toString();
-    }
-
-    public static String extractBlockDataFromState(String state){
-        StringBuilder sb = new StringBuilder();
-
-        Pattern pattern = Pattern.compile("Block\\{minecraft:(.*?)\\}(.*)");
-        Matcher matcher = pattern.matcher(state);
-
-        if (matcher.find()) {
-            sb.append(matcher.group(1));
-            sb.append(matcher.group(2));
         }
 
         return sb.toString();

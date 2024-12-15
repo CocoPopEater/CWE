@@ -15,13 +15,10 @@ public class TestCommand {
     }
 
     private static int run(CommandContext<FabricClientCommandSource> context) {
-
-
         return 1;
     }
 
     private static int runPrint(CommandContext<FabricClientCommandSource> context){
-
         return 1;
     }
 
