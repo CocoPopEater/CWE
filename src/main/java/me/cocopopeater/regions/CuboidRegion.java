@@ -73,6 +73,17 @@ public class CuboidRegion {
         return subRegions;
     }
 
+    public String getFillCommand(String blockData){
+        return "fill %s %s %s %s %s %s %s"
+                .formatted(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ, blockData);
+    }
+
+    public String getReplaceCommand(String fromBlockData, String toBlockData){
+        return "fill %s %s %s %s %s %s %s replace %s"
+                .formatted(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ, toBlockData, fromBlockData);
+    }
+
+
     public void fill(String blockName){
         PlayerUtils.sendCommandAsPlayer(
                 "fill %s %s %s %s %s %s %s"

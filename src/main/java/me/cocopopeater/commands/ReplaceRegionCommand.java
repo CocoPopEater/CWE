@@ -14,6 +14,8 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
@@ -63,12 +65,14 @@ public class ReplaceRegionCommand {
         }
 
         CuboidRegion master = PlayerVariableManager.getCuboid();
-        TimedCommandRunner runner = new TimedCommandRunner();
+
+        List<String> commands = new ArrayList<>();
+
         for(CuboidRegion subRegion : master.separateRegion()){
-            runner.addTask(() -> subRegion.replace(fromBlock, toBlock));
+            commands.add(subRegion.getReplaceCommand(fromBlock, toBlock));
         }
 
-        runner.start(ConfigHandler.getInstance().getCommandDelay(), TimeUnit.MILLISECONDS);
+        PlayerUtils.sendCommandList(commands);
 
         return 1;
     }
