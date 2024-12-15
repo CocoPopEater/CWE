@@ -2,17 +2,14 @@ package me.cocopopeater.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import me.cocopopeater.regions.SchematicRegion;
 import me.cocopopeater.config.ConfigHandler;
-import me.cocopopeater.regions.ClipboardRegion;
 import me.cocopopeater.util.*;
-import me.cocopopeater.util.tasks.TimedCommandRunner;
 import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import me.cocopopeater.util.varmanagers.PlayerVariableManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
-
-import java.util.concurrent.TimeUnit;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
@@ -41,21 +38,15 @@ public class RegionPasteCommand {
             return 0;
         }
 
-        ClipboardRegion clipboardRegion = PlayerVariableManager.getClipBoardRegion();
+        SchematicRegion clipboardRegion = PlayerVariableManager.getSchematicRegion();
         if(clipboardRegion == null){
             PlayerUtils.sendPlayerMessageChat(
                     Text.literal("You do not have a region copied").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
-        TimedCommandRunner runner = new TimedCommandRunner();
-        for(String command : clipboardRegion.getPasteCommandList()){
-            runner.addTask(() -> {
-                PlayerUtils.sendCommandAsPlayer(command);
-            });
-        }
 
-        runner.start(ConfigHandler.getInstance().getCommandDelay(), TimeUnit.MILLISECONDS);
+        PlayerUtils.sendCommandList(clipboardRegion.generateFillCommands());
         return 1;
     }
 }

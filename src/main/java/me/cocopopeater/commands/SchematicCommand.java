@@ -5,9 +5,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import me.cocopopeater.regions.SchematicRegion;
 import me.cocopopeater.config.ConfigHandler;
 import me.cocopopeater.config.FileManager;
-import me.cocopopeater.regions.ClipboardRegion;
 import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import me.cocopopeater.util.PlayerUtils;
 import me.cocopopeater.util.varmanagers.PlayerVariableManager;
@@ -95,14 +95,14 @@ public class SchematicCommand {
                     );
                     return 0;
                 }
-                ClipboardRegion region = PlayerVariableManager.createClipboardRegion();
+                SchematicRegion region = PlayerVariableManager.createSchematicRegion();
                 CompletableFuture.runAsync(() -> {
                     FileManager.saveSchematic(region, schematicName);
                 });
 
                 return 1;
             } else if(option.equalsIgnoreCase("load")){
-                CompletableFuture<ClipboardRegion> future = CompletableFuture.supplyAsync(() -> FileManager.loadSchematic(schematicName));
+                CompletableFuture<SchematicRegion> future = CompletableFuture.supplyAsync(() -> FileManager.loadSchematic(schematicName));
                 future.thenAccept(region -> {
                     if(region == null){
                         PlayerUtils.sendPlayerMessageChat(

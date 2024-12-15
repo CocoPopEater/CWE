@@ -1,6 +1,7 @@
 package me.cocopopeater.util.varmanagers;
 
-import me.cocopopeater.regions.ClipboardRegion;
+import me.cocopopeater.regions.SchematicRegion;
+import me.cocopopeater.blocks.SimpleBlockPos;
 import me.cocopopeater.regions.CuboidRegion;
 import me.cocopopeater.util.PlayerUtils;
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +13,7 @@ public class PlayerVariableManager {
 
     private static BlockPos pos1;
     private static BlockPos pos2;
-    private static ClipboardRegion clipboardRegion;
+    private static SchematicRegion schematicRegion;
 
     public static BlockPos getPos1(){
         return pos1;
@@ -22,24 +23,30 @@ public class PlayerVariableManager {
     }
 
     public static void saveToClipboard(){
-        clipboardRegion = new ClipboardRegion(pos1, pos2,MinecraftClient.getInstance().player.getBlockPos(), MinecraftClient.getInstance().world);
+        schematicRegion = new SchematicRegion(
+                PlayerVariableManager.getPos1(),
+                PlayerVariableManager.getPos2(),
+                MinecraftClient.getInstance().world,
+                SimpleBlockPos.fromBlockPos(MinecraftClient.getInstance().player.getBlockPos())
+        );
     }
 
-    public static ClipboardRegion createClipboardRegion(){
-        return new ClipboardRegion(pos1, pos2,MinecraftClient.getInstance().player.getBlockPos(), MinecraftClient.getInstance().world);
+    public static SchematicRegion createSchematicRegion(){
+        return new SchematicRegion(
+                PlayerVariableManager.getPos1(),
+                PlayerVariableManager.getPos2(),
+                MinecraftClient.getInstance().world,
+                SimpleBlockPos.fromBlockPos(MinecraftClient.getInstance().player.getBlockPos())
+        );
     }
 
-    public static void setClipboardRegion(ClipboardRegion newRegion){
-        clipboardRegion = newRegion;
+    public static void setSchematicRegion(SchematicRegion region){
+        schematicRegion = region;
     }
 
-    public static ClipboardRegion getClipBoardRegion(){
-        return clipboardRegion;
+    public static SchematicRegion getSchematicRegion(){
+        return schematicRegion;
     }
-
-
-
-
     public static void setPos1(PlayerEntity playerEntity, BlockPos pos){
         if(pos.equals(pos1)){
             return;

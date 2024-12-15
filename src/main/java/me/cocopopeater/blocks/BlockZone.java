@@ -34,11 +34,7 @@ public class BlockZone extends Zone{
     }
 
     public void paste(){
-        TimedCommandRunner runner = new TimedCommandRunner();
-        for(String command : this.generateFillCommands()){
-            runner.addTask(() -> PlayerUtils.sendCommandAsPlayer(command));
-        }
-        runner.start(ConfigHandler.getInstance().getCommandDelay(), TimeUnit.MILLISECONDS);
+        PlayerUtils.sendCommandList(this.generateFillCommands());
     }
 
 
