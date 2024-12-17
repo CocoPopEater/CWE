@@ -1,7 +1,6 @@
 package me.cocopopeater;
 
 import me.cocopopeater.commands.*;
-import me.cocopopeater.config.FileManager;
 import me.cocopopeater.events.ChatSuppressor;
 import me.cocopopeater.events.LeftClickBlockEvent;
 import me.cocopopeater.events.RightClickBlockEvent;
@@ -14,7 +13,7 @@ public class CWEClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(ConfigCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(EnableModCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(GiveWandCommand::register);
-        ClientCommandRegistrationCallback.EVENT.register(CheckRegionCommand::register);
+        ClientCommandRegistrationCallback.EVENT.register(RegionSizeCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(ExpandRegionCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(SetRegionCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(ReplaceRegionCommand::register);

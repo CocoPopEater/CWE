@@ -13,9 +13,9 @@ import net.minecraft.text.Text;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
-public class CheckRegionCommand {
+public class RegionSizeCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess) {
-        dispatcher.register(literal("/check-region").executes(CheckRegionCommand::run));
+        dispatcher.register(literal("/size").executes(RegionSizeCommand::run));
     }
 
     public static int run(CommandContext<FabricClientCommandSource> context){
