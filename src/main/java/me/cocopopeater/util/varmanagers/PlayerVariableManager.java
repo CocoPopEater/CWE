@@ -9,6 +9,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.concurrent.CompletableFuture;
+
 public class PlayerVariableManager {
 
     private static BlockPos pos1;
@@ -23,12 +25,15 @@ public class PlayerVariableManager {
     }
 
     public static void saveToClipboard(){
-        schematicRegion = new SchematicRegion(
-                PlayerVariableManager.getPos1(),
-                PlayerVariableManager.getPos2(),
-                MinecraftClient.getInstance().world,
-                SimpleBlockPos.fromBlockPos(MinecraftClient.getInstance().player.getBlockPos())
-        );
+        CompletableFuture.runAsync(() ->{
+            schematicRegion = new SchematicRegion(
+                    PlayerVariableManager.getPos1(),
+                    PlayerVariableManager.getPos2(),
+                    MinecraftClient.getInstance().world,
+                    SimpleBlockPos.fromBlockPos(MinecraftClient.getInstance().player.getBlockPos())
+            );
+        });
+
     }
 
     public static SchematicRegion createSchematicRegion(){

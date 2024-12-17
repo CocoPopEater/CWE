@@ -32,4 +32,12 @@ public class PlayerUtils {
         runner.addTask(() -> sendCommandAsPlayer("gamerule sendCommandFeedback true"));
         runner.start(ConfigHandler.getInstance().getCommandDelay(), TimeUnit.MILLISECONDS);
     }
+
+    public static int getPlayerCurrentWorldMaxHeight(){
+        return MinecraftClient.getInstance().player.clientWorld.getTopYInclusive();
+    }
+
+    public static int getPlayerCurrentWorldMinHeight(){
+        return MinecraftClient.getInstance().player.clientWorld.getBottomY();
+    }
 }

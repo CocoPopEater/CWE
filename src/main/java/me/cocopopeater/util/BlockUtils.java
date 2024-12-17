@@ -21,23 +21,24 @@ public class BlockUtils {
         Matcher matcher = pattern.matcher(state);
 
         if (matcher.find()) {
+
+
+
+
             sb.append(matcher.group(1));
             sb.append(matcher.group(2));
             if(matcher.group(1).contains("head")){
                 BlockEntity blockEntity = world.getBlockEntity(pos);
                 if(blockEntity == null) return sb.toString();
 
-                String regex = "ProfileComponent\\[name=Optional\\[(.*?)]";
-                Pattern namePattern = Pattern.compile(regex);
+                for(var component : blockEntity.createComponentMap()) {
+                    String textureRegex = "textures=\\[Property\\[name=textures, value=([\\w+/=]+)";
 
-                for(var component : blockEntity.createComponentMap()){
-                    System.out.println(component);
-
-                    Matcher nameMatcher = namePattern.matcher(component.toString());
-                    if(nameMatcher.find()){
-                        sb.append("{profile:\"%s\"}".formatted(nameMatcher.group(1)));
+                    Pattern texturePattern = Pattern.compile(textureRegex);
+                    Matcher textureMatcher = texturePattern.matcher(component.toString());
+                    if(textureMatcher.find()){
+                        sb.append("{profile:{properties:[{name:textures,value:\"%s\"}]}}".formatted(textureMatcher.group(1)));
                     }
-
                 }
             }else if(matcher.group(1).contains("sign")){
                 BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -57,7 +58,6 @@ public class BlockUtils {
 
                 // oak_sign{front_text:{messages:['["Line1"]','[" "]','[""]','[""]']}}
                 for(Text text : front.getMessages(false)){
-                    System.out.println(text.getString());
                     sb.append("'[\"%s\"]'".formatted(text.getString())); // adds the string surrounded by [""] example: ["Line1"]
                     if(!(index == 3)){
                         // inside this if means it isn't the last line
@@ -80,7 +80,6 @@ public class BlockUtils {
 
                 // oak_sign{front_text:{messages:['["Line1"]','[" "]','[""]','[""]']}}
                 for(Text text : back.getMessages(false)){
-                    System.out.println(text.getString());
                     sb.append("'[\"%s\"]'".formatted(text.getString())); // adds the string surrounded by [""] example: ["Line1"]
                     if(!(index == 3)){
                         // inside this if means it isn't the last line
@@ -96,7 +95,6 @@ public class BlockUtils {
                 sb.append('}');
             }
         }
-
         return sb.toString();
     }
 

@@ -1,5 +1,6 @@
 package me.cocopopeater.regions;
 
+import me.cocopopeater.blocks.SimpleBlockPos;
 import me.cocopopeater.util.PlayerUtils;
 import me.cocopopeater.util.varmanagers.GlobalVariableManager;
 import net.minecraft.util.math.BlockPos;
@@ -23,15 +24,21 @@ public class CuboidRegion {
         return new BlockPos(maxX, maxY, maxZ);
     }
 
-    public CuboidRegion(BlockPos start, BlockPos end){
-        this.minX = Math.min(start.getX(), end.getX());
-        this.minY = Math.min(start.getY(), end.getY());
-        this.minZ = Math.min(start.getZ(), end.getZ());
+    public CuboidRegion(SimpleBlockPos start, SimpleBlockPos end){
+        this.minX = Math.min(start.x(), end.x());
+        this.minY = Math.max(Math.min(start.y(), end.y()), PlayerUtils.getPlayerCurrentWorldMinHeight());
+        this.minZ = Math.min(start.z(), end.z());
 
-        this.maxX = Math.max(start.getX(), end.getX());
-        this.maxY = Math.max(start.getY(), end.getY());
-        this.maxZ = Math.max(start.getZ(), end.getZ());
+        this.maxX = Math.max(start.x(), end.x());
+        this.maxY = Math.min(Math.max(start.y(), end.y()), PlayerUtils.getPlayerCurrentWorldMaxHeight());
+        this.maxZ = Math.max(start.z(), end.z());
     }
+
+    public CuboidRegion(BlockPos start, BlockPos end){
+        this(SimpleBlockPos.fromBlockPos(start), SimpleBlockPos.fromBlockPos(end));
+    }
+
+
 
 
 
@@ -100,5 +107,22 @@ public class CuboidRegion {
 
     public int getTotalBlocks(){
         return (Math.abs(minX - maxX) + 1) * (Math.abs(minY - maxY) + 1) * (Math.abs(minZ - maxZ) + 1);
+    }
+
+    public String getPositionsAsString(){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(this.minX);
+        sb.append("\n");
+        sb.append(this.minY);
+        sb.append("\n");
+        sb.append(this.minZ);
+        sb.append("\n");
+        sb.append(this.maxX);
+        sb.append("\n");
+        sb.append(this.maxY);
+        sb.append("\n");
+        sb.append(this.maxZ);
+        return sb.toString();
     }
 }

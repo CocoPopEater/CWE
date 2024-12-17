@@ -95,10 +95,17 @@ public class SchematicCommand {
                     );
                     return 0;
                 }
-                SchematicRegion region = PlayerVariableManager.createSchematicRegion();
-                CompletableFuture.runAsync(() -> {
+                CompletableFuture.supplyAsync(() ->{
+                    return PlayerVariableManager.createSchematicRegion();
+                }).thenAcceptAsync(region -> {
                     FileManager.saveSchematic(region, schematicName);
                 });
+
+
+                /*SchematicRegion region = PlayerVariableManager.createSchematicRegion();
+                CompletableFuture.runAsync(() -> {
+                    FileManager.saveSchematic(region, schematicName);
+                });*/
 
                 return 1;
             } else if(option.equalsIgnoreCase("load")){
