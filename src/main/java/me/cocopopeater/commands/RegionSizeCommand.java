@@ -25,6 +25,12 @@ public class RegionSizeCommand {
             );
             return 0;
         }
+        if(PlayerVariableManager.getPos1() == null || PlayerVariableManager.getPos2() == null){
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.literal("You must select both positions to use this command").withColor(GlobalColorRegistry.getBrightRed())
+            );
+            return 0;
+        }
         CuboidRegion region = PlayerVariableManager.getCuboid();
         Text part1 = Text.literal("Total Blocks: %d".formatted(region.getTotalBlocks()));
         context.getSource().sendFeedback(part1);
