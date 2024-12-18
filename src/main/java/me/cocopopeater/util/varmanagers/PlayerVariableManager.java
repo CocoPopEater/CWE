@@ -1,9 +1,13 @@
 package me.cocopopeater.util.varmanagers;
 
+import me.cocopopeater.commands.RegionCopyCommand;
 import me.cocopopeater.regions.SchematicRegion;
 import me.cocopopeater.blocks.SimpleBlockPos;
 import me.cocopopeater.regions.CuboidRegion;
+import me.cocopopeater.util.BlockUtils;
+import me.cocopopeater.util.MathHelper;
 import me.cocopopeater.util.PlayerUtils;
+import me.cocopopeater.util.RegionUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -74,68 +78,109 @@ public class PlayerVariableManager {
 
     }
 
+    private static void expandNorth(int amount){
+        if(pos1.getZ() < pos2.getZ()){
+            pos1 = pos1.add(0,0,-amount);
+        }else{
+            pos2 = pos2.add(0,0,-amount);
+        }
+    }
+
+    private static void expandEast(int amount){
+        if(pos1.getX() > pos2.getX()){
+            pos1 = pos1.add(amount,0,0);
+        }else{
+            pos2 = pos2.add(amount,0,0);
+        }
+    }
+
+    private static void expandSouth(int amount){
+        if(pos1.getZ() > pos2.getZ()){
+            pos1 = pos1.add(0,0,amount);
+        }else{
+            pos2 = pos2.add(0,0,amount);
+        }
+    }
+
+    private static void expandWest(int amount){
+        if(pos1.getX() < pos2.getX()){
+            pos1 = pos1.add(-amount,0,0);
+        }else{
+            pos2 = pos2.add(-amount,0,0);
+        }
+    }
+
+    private static void expandUp(int amount){
+        if(pos1.getY() > pos2.getY()){
+            pos1 = pos1.add(0,amount,0);
+        }else{
+            pos2 = pos2.add(0, amount,0);
+        }
+    }
+
+    private static void expandDown(int amount){
+        if(pos1.getY() < pos2.getY()){
+            pos1 = pos1.add(0,-amount,0);
+        }else{
+            pos2 = pos2.add(0,-amount,0);
+        }
+    }
+    private static void expandVert(){
+        if(pos1.getY() < pos2.getY()){
+            pos1 = new BlockPos(pos1.getX(), PlayerUtils.getPlayerCurrentWorldMinHeight(), pos1.getZ());
+            pos2 = new BlockPos(pos2.getX(), PlayerUtils.getPlayerCurrentWorldMaxHeight(), pos2.getZ());
+        }else{
+            // Yes future me, this is different to the above, the min and max are switched
+            pos2 = new BlockPos(pos2.getX(), PlayerUtils.getPlayerCurrentWorldMinHeight(), pos2.getZ());
+            pos1 = new BlockPos(pos1.getX(), PlayerUtils.getPlayerCurrentWorldMaxHeight(), pos1.getZ());
+        }
+    }
+
     public static void expand(int amount, String direction){
-        switch(direction.toUpperCase()) {
-            case "NORTH" -> {
-                // needs to expand negitive z
-                // find lowest z coord and expand that
 
-                if(pos1.getZ() < pos2.getZ()){
-                    pos1 = pos1.add(0,0,-amount);
-                }else{
-                    pos2 = pos2.add(0,0,-amount);
-                }
+        switch(direction.toUpperCase().charAt(0)){
+            case 'N' -> {
+                expandNorth(amount);
             }
-            case "EAST" -> {
-                // needs to expand positive x
-                // find highest x coord
+            case 'E' -> {
+                expandEast(amount);
+            }
+            case 'S' -> {
+                expandSouth(amount);
+            }
+            case 'W' -> {
+                expandWest(amount);
+            }
+            case 'U' -> {
+                expandUp(amount);
+            }
+            case 'D' -> {
+                expandDown(amount);
+            }
+            case 'V' -> {
+                // vert, should cover the entire y limit
+                expandVert();
+            }
+            // These next ones are relational:
+            // forward, left, right, back, luckily no directions share the same first letter
+            // so we can get away with a tiny bit of recursion
+            case 'F' -> {
+                String dir = MinecraftClient.getInstance().player.getHorizontalFacing().getName();
+                expand(amount, dir);
+            }
+            case 'L' -> {
+                String dir = MinecraftClient.getInstance().player.getHorizontalFacing().rotateYCounterclockwise().getName();
+                expand(amount, dir);
+            }
+            case 'R' -> {
+                String dir = MinecraftClient.getInstance().player.getHorizontalFacing().rotateYClockwise().getName();
+                expand(amount, dir);
+            }
+            case 'B' -> {
+                String dir = MinecraftClient.getInstance().player.getHorizontalFacing().getOpposite().getName();
+                expand(amount, dir);
+            }
 
-                if(pos1.getX() > pos2.getX()){
-                    pos1 = pos1.add(amount,0,0);
-                }else{
-                    pos2 = pos2.add(amount,0,0);
-                }
-            }
-            case "SOUTH" -> {
-                // needs to expand positive z
-                // find highest z coord
-
-                if(pos1.getZ() > pos2.getZ()){
-                    pos1 = pos1.add(0,0,amount);
-                }else{
-                    pos2 = pos2.add(0,0,amount);
-                }
-            }
-            case "WEST" -> {
-                // needs to expand negative x
-                // find lowest x coord
-
-                if(pos1.getX() < pos2.getX()){
-                    pos1 = pos1.add(-amount,0,0);
-                }else{
-                    pos2 = pos2.add(-amount,0,0);
-                }
-            }
-            case "UP" -> {
-                // needs to expand positive x
-                // find highest x coord
-
-                if(pos1.getY() > pos2.getY()){
-                    pos1 = pos1.add(0,amount,0);
-                }else{
-                    pos2 = pos2.add(0, amount,0);
-                }
-            }
-            case "DOWN" -> {
-                // needs to expand positive x
-                // find highest x coord
-
-                if(pos1.getY() < pos2.getY()){
-                    pos1 = pos1.add(0,-amount,0);
-                }else{
-                    pos2 = pos2.add(0,-amount,0);
-                }
-            }
             default -> {
                 PlayerUtils.sendPlayerMessageChat(
                         Text.literal("Unknown direction: %s".formatted(direction))
