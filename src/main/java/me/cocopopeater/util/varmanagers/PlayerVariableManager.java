@@ -56,25 +56,27 @@ public class PlayerVariableManager {
     public static SchematicRegion getSchematicRegion(){
         return schematicRegion;
     }
-    public static void setPos1(PlayerEntity playerEntity, BlockPos pos){
+    public static void setPos1(BlockPos pos){
         if(pos.equals(pos1)){
             return;
         }
         pos1 = pos;
         String blockPosAsString = pos.toShortString();
-        playerEntity.sendMessage(Text.literal("First position set to: (%s)".formatted(blockPosAsString)).withColor(GlobalColorRegistry.getLimeGreen()), true);
-        playerEntity.sendMessage(Text.literal("First position set to: (%s)".formatted(blockPosAsString)).withColor(GlobalColorRegistry.getLimeGreen()), false);
+        PlayerUtils.sendPlayerMessageBoth(
+                Text.literal("First position set to: (%s)".formatted(blockPosAsString)).withColor(GlobalColorRegistry.getLimeGreen())
+        );
 
     }
 
-    public static void setPos2(PlayerEntity playerEntity, BlockPos pos){
+    public static void setPos2(BlockPos pos){
         if(pos.equals(pos2)){
             return;
         }
         pos2 = pos;
         String blockPosAsString = pos.toShortString();
-        playerEntity.sendMessage(Text.literal("Second position set to: (%s)".formatted(blockPosAsString)).withColor(GlobalColorRegistry.getLimeGreen()), true);
-        playerEntity.sendMessage(Text.literal("Second position set to: (%s)".formatted(blockPosAsString)).withColor(GlobalColorRegistry.getLimeGreen()), false);
+        PlayerUtils.sendPlayerMessageBoth(
+                Text.literal("Second position set to: (%s)".formatted(blockPosAsString)).withColor(GlobalColorRegistry.getLimeGreen())
+        );
 
     }
 
@@ -138,6 +140,7 @@ public class PlayerVariableManager {
 
     public static void expand(int amount, String direction){
 
+        // north, east, south, west, up, down, vert, all
         switch(direction.toUpperCase().charAt(0)){
             case 'N' -> {
                 expandNorth(amount);
@@ -161,6 +164,15 @@ public class PlayerVariableManager {
                 // vert, should cover the entire y limit
                 expandVert();
             }
+            // All
+            case 'A' -> {
+                expandNorth(amount);
+                expandEast(amount);
+                expandSouth(amount);
+                expandWest(amount);
+                expandUp(amount);
+                expandDown(amount);
+            }
             // These next ones are relational:
             // forward, left, right, back, luckily no directions share the same first letter
             // so we can get away with a tiny bit of recursion
@@ -179,6 +191,64 @@ public class PlayerVariableManager {
             case 'B' -> {
                 String dir = MinecraftClient.getInstance().player.getHorizontalFacing().getOpposite().getName();
                 expand(amount, dir);
+            }
+
+            default -> {
+                PlayerUtils.sendPlayerMessageChat(
+                        Text.literal("Unknown direction: %s".formatted(direction))
+                                .withColor(GlobalColorRegistry.getBrightRed())
+                );
+            }
+        }
+    }
+    public static void contract(int amount, String direction){
+
+        switch(direction.toUpperCase().charAt(0)){
+            case 'N' -> {
+                expandSouth(-amount);
+            }
+            case 'E' -> {
+                expandWest(-amount);
+            }
+            case 'S' -> {
+                expandNorth(-amount);
+            }
+            case 'W' -> {
+                expandEast(-amount);
+            }
+            case 'U' -> {
+                expandDown(-amount);
+            }
+            case 'D' -> {
+                expandUp(-amount);
+            }
+            // All
+            case 'A' -> {
+                expandNorth(-amount);
+                expandEast(-amount);
+                expandSouth(-amount);
+                expandWest(-amount);
+                expandUp(-amount);
+                expandDown(-amount);
+            }
+            // These next ones are relational:
+            // forward, left, right, back, luckily no directions share the same first letter
+            // so we can get away with a tiny bit of recursion
+            case 'F' -> {
+                String dir = MinecraftClient.getInstance().player.getHorizontalFacing().getName();
+                contract(amount, dir);
+            }
+            case 'L' -> {
+                String dir = MinecraftClient.getInstance().player.getHorizontalFacing().rotateYCounterclockwise().getName();
+                contract(amount, dir);
+            }
+            case 'R' -> {
+                String dir = MinecraftClient.getInstance().player.getHorizontalFacing().rotateYClockwise().getName();
+                contract(amount, dir);
+            }
+            case 'B' -> {
+                String dir = MinecraftClient.getInstance().player.getHorizontalFacing().getOpposite().getName();
+                contract(amount, dir);
             }
 
             default -> {

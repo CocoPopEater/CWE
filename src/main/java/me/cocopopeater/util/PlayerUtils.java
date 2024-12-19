@@ -18,8 +18,12 @@ public class PlayerUtils {
         MinecraftClient.getInstance().player.sendMessage(msg, true);
     }
 
-    public static boolean sendCommandAsPlayer(String command){
+    public static void sendPlayerMessageBoth(Text msg){
+        sendPlayerMessageChat(msg);
+        sendPlayerMessageHotbar(msg);
+    }
 
+    public static boolean sendCommandAsPlayer(String command){
         return MinecraftClient.getInstance().getNetworkHandler().sendCommand(command);
     }
 

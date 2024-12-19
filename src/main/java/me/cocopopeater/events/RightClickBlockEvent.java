@@ -20,7 +20,7 @@ public class RightClickBlockEvent {
         ActionResult result = ActionResult.PASS;
 
         if(playerEntity.getMainHandStack().getItem() == Items.WOODEN_AXE){
-            PlayerVariableManager.setPos2(playerEntity, hitResult.getBlockPos());
+            PlayerVariableManager.setPos2(hitResult.getBlockPos());
             result = ActionResult.FAIL;
         }
         return result;

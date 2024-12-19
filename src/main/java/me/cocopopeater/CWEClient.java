@@ -15,6 +15,7 @@ public class CWEClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(GiveWandCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(RegionSizeCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(ExpandRegionCommand::register);
+        ClientCommandRegistrationCallback.EVENT.register(ContractRegionCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(SetRegionCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(ReplaceRegionCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(RegionCopyCommand::register);
@@ -22,6 +23,9 @@ public class CWEClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(SchematicCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(ReplaceNearCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(DrainCommand::register);
+        ClientCommandRegistrationCallback.EVENT.register(ChunkCommand::register);
+        ClientCommandRegistrationCallback.EVENT.register(InsetRegionCommand::register);
+        ClientCommandRegistrationCallback.EVENT.register(OutsetRegionCommand::register);
 
 
         ClientCommandRegistrationCallback.EVENT.register(TestCommand::register);

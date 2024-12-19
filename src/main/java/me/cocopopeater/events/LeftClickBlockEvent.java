@@ -21,7 +21,7 @@ public class LeftClickBlockEvent {
         ActionResult result = ActionResult.PASS;
 
         if(playerEntity.getMainHandStack().getItem() == Items.WOODEN_AXE){
-            PlayerVariableManager.setPos1(playerEntity, blockPos);
+            PlayerVariableManager.setPos1(blockPos);
             result = ActionResult.FAIL;
         }
         return result;
