@@ -1,18 +1,18 @@
 package me.cocopopeater.util.varmanagers;
 
-import me.cocopopeater.commands.RegionCopyCommand;
 import me.cocopopeater.regions.SchematicRegion;
 import me.cocopopeater.blocks.SimpleBlockPos;
 import me.cocopopeater.regions.CuboidRegion;
-import me.cocopopeater.util.BlockUtils;
-import me.cocopopeater.util.MathHelper;
+import me.cocopopeater.tools.Tool;
+import me.cocopopeater.tools.ToolFactory;
 import me.cocopopeater.util.PlayerUtils;
-import me.cocopopeater.util.RegionUtils;
+import me.cocopopeater.tools.ToolType;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class PlayerVariableManager {
@@ -20,6 +20,22 @@ public class PlayerVariableManager {
     private static BlockPos pos1;
     private static BlockPos pos2;
     private static SchematicRegion schematicRegion;
+
+    private static ToolType selectedTool;
+
+    private static Map<String, Tool> toolMap = new HashMap<>();
+
+    public static void bindTool(String itemName, ToolType newTool, String optionalInfo){
+        toolMap.put(itemName, ToolFactory.createTool(newTool, optionalInfo));
+
+    }
+    public static void unbindTool(String itemName){
+        toolMap.remove(itemName);
+    }
+
+    public static Tool getTool(String itemName){
+        return toolMap.getOrDefault(itemName, null);
+    }
 
     public static BlockPos getPos1(){
         return pos1;

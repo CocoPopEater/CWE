@@ -21,6 +21,4 @@ public class TestCommand {
     private static int runPrint(CommandContext<FabricClientCommandSource> context){
         return 1;
     }
-
-
 }

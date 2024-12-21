@@ -26,6 +26,7 @@ public class CWEClient implements ClientModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(ChunkCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(InsetRegionCommand::register);
         ClientCommandRegistrationCallback.EVENT.register(OutsetRegionCommand::register);
+        ClientCommandRegistrationCallback.EVENT.register(ToolsCommand::register);
 
 
         ClientCommandRegistrationCallback.EVENT.register(TestCommand::register);

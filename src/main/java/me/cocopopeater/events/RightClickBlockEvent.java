@@ -1,6 +1,9 @@
 package me.cocopopeater.events;
 
 import me.cocopopeater.config.ConfigHandler;
+import me.cocopopeater.tools.Tool;
+import me.cocopopeater.tools.ToolType;
+import me.cocopopeater.tools.impls.TreeTool;
 import me.cocopopeater.util.varmanagers.PlayerVariableManager;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,12 +20,25 @@ public class RightClickBlockEvent {
 
     public static ActionResult run(PlayerEntity playerEntity, World world, Hand hand, BlockHitResult hitResult){
         if(!ConfigHandler.getInstance().isEnabled()) return ActionResult.PASS;
-        ActionResult result = ActionResult.PASS;
+
+        String itemName = playerEntity.getMainHandStack().getItem().getName().getString();
+
+        if(!(PlayerVariableManager.getTool(itemName) == null)){
+            // The user has bound a tool to the currently held item
+            Tool tool = PlayerVariableManager.getTool(itemName);
+            if(!(tool instanceof TreeTool treeTool)) return ActionResult.PASS;
+            treeTool.applyEffect(hitResult);
+            return ActionResult.FAIL;
+        }
 
         if(playerEntity.getMainHandStack().getItem() == Items.WOODEN_AXE){
             PlayerVariableManager.setPos2(hitResult.getBlockPos());
-            result = ActionResult.FAIL;
+             return ActionResult.FAIL;
         }
-        return result;
+        return ActionResult.PASS;
+    }
+
+    private static void handleEvent(PlayerEntity playerEntity, World world, Hand hand, BlockHitResult hitResult, ToolType tool){
+
     }
 }

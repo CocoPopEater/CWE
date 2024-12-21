@@ -36,7 +36,9 @@ public class SchematicCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess){
         dispatcher.register(literal("/schematic")
                         .then(argument("option", StringArgumentType.string()).suggests(generateSchematicList()).executes(SchematicCommand::runList)
-                                .then(argument("schematic-name", StringArgumentType.string()).executes(SchematicCommand::runSchematic))));
+                                .then(argument("schematic-name", StringArgumentType.string()).executes(SchematicCommand::runSchematic))
+                        )
+        );
     }
 
     public static int runList(CommandContext<FabricClientCommandSource> context){
