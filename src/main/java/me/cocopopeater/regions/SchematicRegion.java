@@ -52,7 +52,7 @@ public class SchematicRegion extends CuboidRegion {
             BlockZone newZone = new BlockZone(
                     new SimpleBlockPos(startOffsetX, startOffsetY, startOffsetZ),
                     new SimpleBlockPos(endOffsetX, endOffsetY, endOffsetZ),
-                    zone.blockData
+                    zone.getBlockData()
             );
 
             newBlockZones.add(newZone);
