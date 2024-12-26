@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * This class represents a cuboid to be filled with a single set of block data
  */
 public class BlockZone extends Zone{
-    public final String blockData;
+    private final String blockData;
 
     public BlockZone(SimpleBlockPos pos1, SimpleBlockPos pos2, String blockData){
         super(pos1, pos2);

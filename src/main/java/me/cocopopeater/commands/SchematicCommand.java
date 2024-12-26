@@ -102,13 +102,6 @@ public class SchematicCommand {
                 }).thenAcceptAsync(region -> {
                     FileManager.saveSchematic(region, schematicName);
                 });
-
-
-                /*SchematicRegion region = PlayerVariableManager.createSchematicRegion();
-                CompletableFuture.runAsync(() -> {
-                    FileManager.saveSchematic(region, schematicName);
-                });*/
-
                 return 1;
             } else if(option.equalsIgnoreCase("load")){
                 CompletableFuture<SchematicRegion> future = CompletableFuture.supplyAsync(() -> FileManager.loadSchematic(schematicName));
@@ -116,6 +109,12 @@ public class SchematicCommand {
                     if(region == null){
                         PlayerUtils.sendPlayerMessageChat(
                                 Text.literal("Invalid schematic").withColor(GlobalColorRegistry.getBrightRed())
+                        );
+                    }else{
+                        PlayerVariableManager.setSchematicRegion(region);
+                        PlayerUtils.sendPlayerMessageChat(
+                                Text.literal("Successfully loaded schematic: %s".formatted(schematicName))
+                                        .withColor(GlobalColorRegistry.getLimeGreen())
                         );
                     }
                 });
