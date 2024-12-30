@@ -3,11 +3,15 @@ package me.cocopopeater.regions;
 import me.cocopopeater.blocks.BlockZone;
 import me.cocopopeater.blocks.SimpleBlockPos;
 import me.cocopopeater.blocks.Zone;
+import me.cocopopeater.config.ConfigHandler;
 import me.cocopopeater.util.BlockUtils;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class SchematicRegion extends CuboidRegion {
     protected List<BlockZone> zones;
@@ -52,7 +56,7 @@ public class SchematicRegion extends CuboidRegion {
             BlockZone newZone = new BlockZone(
                     new SimpleBlockPos(startOffsetX, startOffsetY, startOffsetZ),
                     new SimpleBlockPos(endOffsetX, endOffsetY, endOffsetZ),
-                    zone.blockData
+                    zone.getBlockData()
             );
 
             newBlockZones.add(newZone);
@@ -60,62 +64,70 @@ public class SchematicRegion extends CuboidRegion {
         this.zones = newBlockZones;
     }
 
-
-
-    private void cacheBlockData(Map<SimpleBlockPos, String> blockDataMap, World world){
+    private void cacheBlockData(ConcurrentMap<SimpleBlockPos, String> blockDataMap, World world){
         // cache block data for each position for easy checks later
-        for (int x = getMin().getX(); x <= getMax().getX(); x++) {
-            for (int y = getMin().getY(); y <= getMax().getY(); y++) {
-                for (int z = getMin().getZ(); z <= getMax().getZ(); z++) {
-                    BlockPos pos = new BlockPos(x, y, z);
-                    blockDataMap.put(new SimpleBlockPos(x, y, z), getBlockData(pos, world));
+        if(ConfigHandler.getInstance().isParallelProcessing()){
+            for (int x = getMin().getX(); x <= getMax().getX(); x++) {
+                for (int y = getMin().getY(); y <= getMax().getY(); y++) {
+                    for (int z = getMin().getZ(); z <= getMax().getZ(); z++) {
+                        int finalX = x;
+                        int finalY = y;
+                        int finalZ = z;
+
+                        Thread.startVirtualThread(() -> {
+                            BlockPos pos = new BlockPos(finalX, finalY, finalZ);
+                            blockDataMap.put(new SimpleBlockPos(finalX, finalY, finalZ), getBlockData(pos, world));
+                        });
+
+                    }
+                }
+            }
+        }else{
+            for (int x = getMin().getX(); x <= getMax().getX(); x++) {
+                for (int y = getMin().getY(); y <= getMax().getY(); y++) {
+                    for (int z = getMin().getZ(); z <= getMax().getZ(); z++) {
+                        int finalX = x;
+                        int finalY = y;
+                        int finalZ = z;
+                        BlockPos pos = new BlockPos(finalX, finalY, finalZ);
+                        blockDataMap.put(new SimpleBlockPos(finalX, finalY, finalZ), getBlockData(pos, world));
+
+                    }
                 }
             }
         }
     }
 
     public List<BlockZone> generateZones(World world) {
-        // block data might exceed command length
-        // if command length more than 250 then set the default block
-        // then run data merge commands for the excess data
-
-        // e.g: dark_oak_fence[east\u003dtrue,north\u003dtrue,south\u003dfalse,waterlogged\u003dfalse,west\u003dfalse]
-        // becomes
-        // setblock ~ ~ ~ dark_oak_fence
-        // data merge ~ ~ ~ [east\u003dtrue,north\u003dtrue,south\u003dfalse,waterlogged\u003dfalse,west\u003dfalse]
-        // or
-        // data merge ~ ~ ~ [east\u003dtrue,north\u003dtrue]
-        // data merge ~ ~ ~ [south\u003dfalse,waterlogged\u003dfalse,west\u003dfalse]
-        // use {} for data merge commands
 
         ArrayList<BlockZone> zones = new ArrayList<>();
-        Map<SimpleBlockPos, String> blockDataMap = new HashMap<>();
+        ConcurrentHashMap<SimpleBlockPos, String> blockDataMap = new ConcurrentHashMap<>();
         Set<SimpleBlockPos> visited = new HashSet<>();
 
-        cacheBlockData(blockDataMap, world);
+        CompletableFuture.runAsync(() -> {
+            cacheBlockData(blockDataMap, world);
+        }).thenRun(() -> {
+            for (int y = this.minY; y <= this.maxY; y++) {
+                for (int x = this.minX; x <= this.maxX; x++) {
+                    for (int z = this.minZ; z <= this.maxZ; z++) {
+                        SimpleBlockPos currentPos = new SimpleBlockPos(x, y, z);
 
-        for (int y = this.minY; y <= this.maxY; y++) {
-            for (int x = this.minX; x <= this.maxX; x++) {
-                for (int z = this.minZ; z <= this.maxZ; z++) {
-                    SimpleBlockPos currentPos = new SimpleBlockPos(x, y, z);
+                        if (visited.contains(currentPos)) {
+                            continue;
+                        }
 
-                    if (visited.contains(currentPos)) {
-                        continue;
+                        String blockData = blockDataMap.get(currentPos);
+
+                        SimpleBlockPos start = currentPos;
+                        SimpleBlockPos end = findZoneEnd(start, blockData, blockDataMap, visited);
+
+                        BlockZone zone = new BlockZone(start, end, blockData);
+                        visited.addAll(zone.getAllPoints());
+                        zones.add(zone);
                     }
-
-                    String blockData = blockDataMap.get(currentPos);
-
-                    SimpleBlockPos start = currentPos;
-                    SimpleBlockPos end = findZoneEnd(start, blockData, blockDataMap, visited);
-
-                    BlockZone zone = new BlockZone(start, end, blockData);
-                    visited.addAll(zone.getAllPoints());
-                    zones.add(zone);
                 }
             }
-        }
-
-
+        }).join();
         return zones;
     }
 

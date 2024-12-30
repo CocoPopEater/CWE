@@ -128,12 +128,8 @@ public class FileManager {
             Type regType = new TypeToken<SchematicRegion>() {}.getType();
             String decomp = decompress(data);
             region = gson.fromJson(decomp, regType);
-            PlayerVariableManager.setSchematicRegion(region);
 
-            PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Successfully loaded schematic: %s".formatted(schematicName))
-                            .withColor(GlobalColorRegistry.getLimeGreen())
-            );
+
         } catch (IOException e) {
             PlayerUtils.sendPlayerMessageChat(
                     Text.literal("IOE: Unable to load schematic: %s".formatted(schematicName))
