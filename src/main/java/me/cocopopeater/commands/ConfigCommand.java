@@ -23,6 +23,7 @@ public class ConfigCommand {
 
     private static final SuggestionProvider<FabricClientCommandSource> OPTION_SUGGESTIONS = (context, builder) -> {
         builder.suggest("enabled");
+        builder.suggest("parallel-processing");
         builder.suggest("command-delay");
         return builder.buildFuture();
     };
@@ -76,6 +77,19 @@ public class ConfigCommand {
                         message
                 );
             }
+            case "parallel-processing" -> {
+                boolean isParallelProcessing = ConfigHandler.getInstance().isParallelProcessing();
+                int rgbColor = isParallelProcessing ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
+
+                Text part1 = Text.literal("Parallel Processing is currently: ");
+                Text part2 = Text.literal(isParallelProcessing ? "enabled" : "disabled")
+                        .withColor(rgbColor);
+
+                Text message = part1.copy().append(part2);
+                PlayerUtils.sendPlayerMessageChat(
+                        message
+                );
+            }
             case "command-delay" -> {
                 int delay = ConfigHandler.getInstance().getCommandDelay();
 
@@ -97,7 +111,7 @@ public class ConfigCommand {
 
     private static void handleConfigSet(String configOption, String value){
         switch(configOption.toLowerCase()){
-            case "mod-enabled" -> {
+            case "enabled" -> {
                 boolean flag;
                 if(value.toLowerCase().equals("true")) {
                     flag = true;
@@ -110,11 +124,38 @@ public class ConfigCommand {
                     return;
                 }
                 ConfigHandler.getInstance().setEnabled(flag);
+
                 boolean enabled = ConfigHandler.getInstance().isEnabled();
                 int rgbColor = enabled ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
 
                 Text part1 = Text.literal("CWE is currently: ");
                 Text part2 = Text.literal(enabled ? "activated" : "deactivated")
+                        .withColor(rgbColor);
+
+                Text message = part1.copy().append(part2);
+                PlayerUtils.sendPlayerMessageChat(
+                        message
+                );
+            }
+            case "parallel-processing" -> {
+                boolean flag;
+                if(value.toLowerCase().equals("true")) {
+                    flag = true;
+                }else if (value.toLowerCase().equals("false")){
+                    flag = false;
+                }else{
+                    PlayerUtils.sendPlayerMessageChat(
+                            Text.literal("Invalid boolean flag: %s".formatted(value)).withColor(GlobalColorRegistry.getBrightRed())
+                    );
+                    return;
+                }
+                ConfigHandler.getInstance().setParallelProcessing(flag);
+
+                boolean isParallelProcessing = ConfigHandler.getInstance().isParallelProcessing();
+                int rgbColor = isParallelProcessing ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
+
+                Text part1 = Text.literal("Parallel Processing is currently: ");
+                Text part2 = Text.literal(isParallelProcessing ? "enabled" : "disabled")
                         .withColor(rgbColor);
 
                 Text message = part1.copy().append(part2);
