@@ -63,6 +63,11 @@ public class ConfigHandler {
         return isParallelProcessing;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
+        saveConfig();
+    }
+
     public void setParallelProcessing(boolean enabled) {
         this.isParallelProcessing = enabled;
         saveConfig();
