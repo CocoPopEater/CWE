@@ -14,6 +14,7 @@ public class ConfigHandler {
 
     // Example config fields
     private boolean isEnabled = true;
+    private boolean isParallelProcessing = true;
     private int commandDelay = 1000;
 
     private static ConfigHandler instance;
@@ -58,8 +59,12 @@ public class ConfigHandler {
         return isEnabled;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.isEnabled = enabled;
+    public boolean isParallelProcessing() {
+        return isParallelProcessing;
+    }
+
+    public void setParallelProcessing(boolean enabled) {
+        this.isParallelProcessing = enabled;
         saveConfig();
     }
 
