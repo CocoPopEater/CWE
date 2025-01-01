@@ -133,7 +133,7 @@ public class ConfigCommand {
                         message
                 );
             }
-            case "parallel-processing" -> {
+            case "parallel-caching" -> {
                 boolean flag;
                 if(value.equalsIgnoreCase("true")) {
                     flag = true;
@@ -147,11 +147,11 @@ public class ConfigCommand {
                 }
                 ConfigHandler.getInstance().setParallelCaching(flag);
 
-                boolean isParallelProcessing = ConfigHandler.getInstance().isParallelCaching();
-                int rgbColor = isParallelProcessing ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
+                boolean isParallelCaching = ConfigHandler.getInstance().isParallelCaching();
+                int rgbColor = isParallelCaching ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
 
                 Text message = Text.translatable("command.config.parallel_caching_status",
-                        Text.translatable(isParallelProcessing ? "mod.generic.activated" : "mod.generic.deactivated")
+                        Text.translatable(isParallelCaching ? "mod.generic.activated" : "mod.generic.deactivated")
                                 .setStyle(Style.EMPTY).withColor(rgbColor));
 
                 PlayerUtils.sendPlayerMessageChat(
