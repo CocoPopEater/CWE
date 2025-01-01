@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
+import me.cocopopeater.config.ConfigHandler;
 import me.cocopopeater.tools.TreeType;
 import me.cocopopeater.util.PlayerUtils;
 import me.cocopopeater.tools.ToolType;
@@ -21,7 +22,7 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.lit
 public class ToolsCommand {
 
 
-    private static SuggestionProvider<FabricClientCommandSource> DYNAMIC_SUGGESTIONS = (context, builder) -> {
+    private static final SuggestionProvider<FabricClientCommandSource> DYNAMIC_SUGGESTIONS = (context, builder) -> {
         if(context.getNodes().size() > 1){
             // the user has types a tool type
             String toolType = context.getArgument("tool-name", String.class);
@@ -59,8 +60,14 @@ public class ToolsCommand {
     }
 
     private static int run(CommandContext<FabricClientCommandSource> context) {
+        if(!ConfigHandler.getInstance().isEnabled()){
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
+            );
+            return 0;
+        }
         StringBuilder sb = new StringBuilder();
-        sb.append("Tools:\n");
+        sb.append(Text.translatable("mod.ui.tools").getString());
         for(ToolType tool : ToolType.values()){
             if(tool == ToolType.NONE) continue;
             sb.append("%s".formatted(StringUtils.capitalize(tool.toString().toLowerCase())));
@@ -88,9 +95,9 @@ public class ToolsCommand {
         if(context.getSource().getPlayer().getMainHandStack().getItem() instanceof BlockItem
             || itemName.equals("Air")){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unable to bind tool to: %s".formatted(StringUtils.capitalize(choice))).withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("command.tool.cannot_bind", StringUtils.capitalize(choice)).withColor(GlobalColorRegistry.getBrightRed())
             );
-            return 1;
+            return 0;
         }
 
 
@@ -99,9 +106,9 @@ public class ToolsCommand {
             tool = ToolType.valueOf(choice.toUpperCase());
         } catch (IllegalArgumentException e){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unknown tool: %s".formatted(choice)).withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("command.tool.unknown_tool", choice).withColor(GlobalColorRegistry.getBrightRed())
             );
-            return 1;
+            return 0;
         }
         String toolInfo;
         try{

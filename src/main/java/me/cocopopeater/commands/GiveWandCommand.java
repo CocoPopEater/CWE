@@ -20,7 +20,7 @@ public class GiveWandCommand {
     public static int run(CommandContext<FabricClientCommandSource> context){
         if(!ConfigHandler.getInstance().isEnabled()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("The mod is not enabled").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }

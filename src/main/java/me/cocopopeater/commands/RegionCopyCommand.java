@@ -20,19 +20,19 @@ public class RegionCopyCommand {
     public static int run(CommandContext<FabricClientCommandSource> context){
         if(!ConfigHandler.getInstance().isEnabled()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("The mod is not enabled").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
         if(PlayerVariableManager.getPos1() == null || PlayerVariableManager.getPos2() == null){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("You need to set the region positions").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("region.positions_required").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
         PlayerVariableManager.saveToClipboard();
         PlayerUtils.sendPlayerMessageChat(
-                Text.literal("Region copied to clipboard").withColor(GlobalColorRegistry.getLimeGreen())
+                Text.translatable("region.copied").withColor(GlobalColorRegistry.getLimeGreen())
         );
         return 1;
     }

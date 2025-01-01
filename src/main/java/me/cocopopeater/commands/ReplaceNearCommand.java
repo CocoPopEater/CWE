@@ -11,13 +11,11 @@ import me.cocopopeater.util.BlockUtils;
 import me.cocopopeater.util.PlayerUtils;
 import me.cocopopeater.util.RegionUtils;
 import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
-import me.cocopopeater.util.varmanagers.PlayerVariableManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import javax.swing.plaf.synth.Region;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,13 +39,13 @@ public class ReplaceNearCommand {
     public static int run(CommandContext<FabricClientCommandSource> context){
         if(!ConfigHandler.getInstance().isEnabled()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("The mod is not enabled").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
         if(!BlockUtils.canFillBlocks()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("You dont have permission to perform this command")
+                    Text.translatable("mod.generic.insufficient_permission")
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
@@ -62,18 +60,16 @@ public class ReplaceNearCommand {
 
         if (fromBlockCheck.isEmpty()) {
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unknown block: %s".formatted(fromBlock)).withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.blocks.unknown_block", fromBlock).withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
         if (toBlockCheck.isEmpty()) {
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unknown block: %s".formatted(toBlock)).withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.blocks.unknown_block", toBlock).withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
-
-
 
         CuboidRegion master = RegionUtils.createCuboidAroundPoint(SimpleBlockPos.fromBlockPos(context.getSource().getPlayer().getBlockPos()), radius);
 

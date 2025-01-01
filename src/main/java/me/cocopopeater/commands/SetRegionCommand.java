@@ -30,13 +30,13 @@ public class SetRegionCommand {
     public static int run(CommandContext<FabricClientCommandSource> context){
         if(!ConfigHandler.getInstance().isEnabled()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("The mod is not enabled").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
         if(!BlockUtils.canFillBlocks()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("You dont have permission to perform this command")
+                    Text.translatable("mod.generic.insufficient_permission")
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
@@ -47,7 +47,7 @@ public class SetRegionCommand {
 
         if (blockCheck.isEmpty()) {
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unknown block: %s".formatted(blockName)).withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.blocks.unknown_block", blockName).withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }

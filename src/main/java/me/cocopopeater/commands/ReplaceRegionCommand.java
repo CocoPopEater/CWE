@@ -6,7 +6,6 @@ import com.mojang.brigadier.context.CommandContext;
 import me.cocopopeater.config.ConfigHandler;
 import me.cocopopeater.regions.CuboidRegion;
 import me.cocopopeater.util.*;
-import me.cocopopeater.util.tasks.TimedCommandRunner;
 import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import me.cocopopeater.util.varmanagers.PlayerVariableManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -16,7 +15,6 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
@@ -33,13 +31,13 @@ public class ReplaceRegionCommand {
     public static int run(CommandContext<FabricClientCommandSource> context){
         if(!ConfigHandler.getInstance().isEnabled()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("The mod is not enabled").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
         if(!BlockUtils.canFillBlocks()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("You dont have permission to perform this command")
+                    Text.translatable("mod.generic.insufficient_permission")
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
@@ -53,13 +51,13 @@ public class ReplaceRegionCommand {
 
         if (fromBlockCheck.isEmpty()) {
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unknown block: %s".formatted(fromBlock)).withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.blocks.unknown_block", fromBlock).withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
         if (toBlockCheck.isEmpty()) {
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unknown block: %s".formatted(toBlock)).withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.blocks.unknown_block", toBlock).withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }

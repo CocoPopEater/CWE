@@ -2,10 +2,11 @@ package me.cocopopeater.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import me.cocopopeater.CWEClient;
 import me.cocopopeater.blocks.SimpleBlockPos;
 import me.cocopopeater.blocks.Zone;
+import me.cocopopeater.config.ConfigHandler;
 import me.cocopopeater.util.PlayerUtils;
+import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import me.cocopopeater.util.varmanagers.PlayerVariableManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -16,8 +17,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.WorldChunk;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
@@ -33,6 +32,13 @@ public class ChunkCommand {
     }
 
     private static int run(CommandContext<FabricClientCommandSource> context) {
+        if(!ConfigHandler.getInstance().isEnabled()){
+            PlayerUtils.sendPlayerMessageChat(
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
+            );
+            return 0;
+        }
+
         ClientPlayerEntity player = MinecraftClient.getInstance().player;
         WorldChunk chunk = player.getWorld().getWorldChunk(player.getBlockPos());
 
@@ -41,14 +47,6 @@ public class ChunkCommand {
 
         int maxX = minX + 15;
         int maxZ = minZ + 15;
-        PlayerUtils.sendPlayerMessageChat(
-                Text.literal("%d %d -> %d %d".formatted(
-                        minX,
-                        minZ,
-                        maxX,
-                        maxZ
-                ))
-        );
 
         SimpleBlockPos minPos = new SimpleBlockPos(minX, PlayerUtils.getPlayerCurrentWorldMinHeight(), minZ);
         SimpleBlockPos maxPos = new SimpleBlockPos(maxX, PlayerUtils.getPlayerCurrentWorldMaxHeight(), maxZ);

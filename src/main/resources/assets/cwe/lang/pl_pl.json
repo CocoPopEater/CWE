@@ -1,0 +1,48 @@
+{
+  "mod.generic.activated": "activated",
+  "mod.generic.deactivated": "deactivated",
+  "mod.generic.invalid_boolean": "Invalid boolean flag: %1$s",
+  "mod.generic.invalid_integer": "Invalid integer: %1$s",
+  "mod.generic.insufficient_permission": "You don't have permission to perform this command",
+  "mod.generic.executing_tasks": "Executing %1$s tasks...",
+  "mod.generic.completed_tasks": "Tasks Completed",
+  "mod.generic.unknown_direction": "Unknown direction: %1$s",
+
+  "mod.blocks.unknown_block": "Unknown block: %1$s",
+  "mod.status.not_enabled": "The mod is not enabled",
+  "mod.ui.saved_schematics": "Saved Schematics:",
+  "mod.ui.tools": "Tools:\n",
+
+  "command.error.invalid_argument": "Invalid argument %1$s",
+  "command.error.missing_argument": "Missing argument",
+
+  "command.config.mod_status": "CWE is currently %1$s",
+  "command.config.parallel_processing_status": "Parallel processing is currently %1$s",
+  "command.config.command_delay": "Current command delay: %1$s",
+  "command.config.unknown_key": "Unknown config key: %1$s",
+  "command.enable_mod.toggle": "CWE has been %1$s",
+  "command.contract_region.contracted": "Region contracted %1$s blocks",
+  "command.expand_region.expanded": "Region expanded %1$s blocks",
+  "command.schematic.specify_schematic_name": "Please specify a schematic name",
+  "command.schematic.schematic_loaded": "Successfully loaded schematic: %1$s",
+  "command.schematic.invalid_schematic": "Invalid schematic",
+  "command.tool.cannot_bind": "Unable to bind tool to: %1$s",
+  "command.tool.unknown_tool": "Unknown tool: %1$s",
+
+  "region.positions_required": "You must set the region positions",
+  "region.copied": "Region copied to clipboard",
+  "region.no_region_copied": "You do not have a region copied",
+  "region.size": "Dimensions:\nX:%1$s\nY:%2$s\nZ:%3$s\nTotal Blocks: %4$s",
+  "region.selection.position1": "First position set to: (%1$s)",
+  "region.selection.position2": "Second position set to: (%1$s)",
+
+  "files.error.schematic_directory_missing": "Unable to find schematic directory",
+  "files.error.insufficient_permission": "Insufficient file permissions",
+  "files.error.invalid_region": "Failed to save region: Invalid Region",
+  "files.error.file_create_failed": "Failed to create file for schematic: %1$s",
+  "files.error.ioexception": "IOException: %1$s",
+  "files.error.exception": "Exception: %1$s",
+  "files.error.cannot_find_file": "Cannot find file: %1$s from path: %2$s",
+
+  "files.success.region_saved": "Region saved: %1$s"
+}

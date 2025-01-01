@@ -21,9 +21,7 @@ public class PlayerVariableManager {
     private static BlockPos pos2;
     private static SchematicRegion schematicRegion;
 
-    private static ToolType selectedTool;
-
-    private static Map<String, Tool> toolMap = new HashMap<>();
+    private static final Map<String, Tool> toolMap = new HashMap<>();
 
     public static void bindTool(String itemName, ToolType newTool, String optionalInfo){
         toolMap.put(itemName, ToolFactory.createTool(newTool, optionalInfo));
@@ -45,14 +43,12 @@ public class PlayerVariableManager {
     }
 
     public static void saveToClipboard(){
-        CompletableFuture.runAsync(() ->{
-            schematicRegion = new SchematicRegion(
-                    PlayerVariableManager.getPos1(),
-                    PlayerVariableManager.getPos2(),
-                    MinecraftClient.getInstance().world,
-                    SimpleBlockPos.fromBlockPos(MinecraftClient.getInstance().player.getBlockPos())
-            );
-        });
+        CompletableFuture.runAsync(() -> schematicRegion = new SchematicRegion(
+                PlayerVariableManager.getPos1(),
+                PlayerVariableManager.getPos2(),
+                MinecraftClient.getInstance().world,
+                SimpleBlockPos.fromBlockPos(MinecraftClient.getInstance().player.getBlockPos())
+        ));
 
     }
 
@@ -79,7 +75,7 @@ public class PlayerVariableManager {
         pos1 = pos;
         String blockPosAsString = pos.toShortString();
         PlayerUtils.sendPlayerMessageBoth(
-                Text.literal("First position set to: (%s)".formatted(blockPosAsString)).withColor(GlobalColorRegistry.getLimeGreen())
+                Text.translatable("region.selection.position1", blockPosAsString).withColor(GlobalColorRegistry.getLimeGreen())
         );
 
     }
@@ -91,7 +87,7 @@ public class PlayerVariableManager {
         pos2 = pos;
         String blockPosAsString = pos.toShortString();
         PlayerUtils.sendPlayerMessageBoth(
-                Text.literal("Second position set to: (%s)".formatted(blockPosAsString)).withColor(GlobalColorRegistry.getLimeGreen())
+                Text.translatable("region.selection.position2", blockPosAsString).withColor(GlobalColorRegistry.getLimeGreen())
         );
 
     }
@@ -158,28 +154,14 @@ public class PlayerVariableManager {
 
         // north, east, south, west, up, down, vert, all
         switch(direction.toUpperCase().charAt(0)){
-            case 'N' -> {
-                expandNorth(amount);
-            }
-            case 'E' -> {
-                expandEast(amount);
-            }
-            case 'S' -> {
-                expandSouth(amount);
-            }
-            case 'W' -> {
-                expandWest(amount);
-            }
-            case 'U' -> {
-                expandUp(amount);
-            }
-            case 'D' -> {
-                expandDown(amount);
-            }
-            case 'V' -> {
-                // vert, should cover the entire y limit
-                expandVert();
-            }
+            case 'N' -> expandNorth(amount);
+            case 'E' -> expandEast(amount);
+            case 'S' -> expandSouth(amount);
+            case 'W' -> expandWest(amount);
+            case 'U' -> expandUp(amount);
+            case 'D' -> expandDown(amount);
+            case 'V' -> expandVert(); // vert, should cover the entire y limit
+
             // All
             case 'A' -> {
                 expandNorth(amount);
@@ -209,35 +191,21 @@ public class PlayerVariableManager {
                 expand(amount, dir);
             }
 
-            default -> {
-                PlayerUtils.sendPlayerMessageChat(
-                        Text.literal("Unknown direction: %s".formatted(direction))
-                                .withColor(GlobalColorRegistry.getBrightRed())
-                );
-            }
+            default -> PlayerUtils.sendPlayerMessageChat(
+                    Text.translatable("mod.generic.unknown_direction", direction)
+                            .withColor(GlobalColorRegistry.getBrightRed())
+            );
         }
     }
     public static void contract(int amount, String direction){
 
         switch(direction.toUpperCase().charAt(0)){
-            case 'N' -> {
-                expandSouth(-amount);
-            }
-            case 'E' -> {
-                expandWest(-amount);
-            }
-            case 'S' -> {
-                expandNorth(-amount);
-            }
-            case 'W' -> {
-                expandEast(-amount);
-            }
-            case 'U' -> {
-                expandDown(-amount);
-            }
-            case 'D' -> {
-                expandUp(-amount);
-            }
+            case 'N' -> expandSouth(-amount);
+            case 'E' -> expandWest(-amount);
+            case 'S' -> expandNorth(-amount);
+            case 'W' -> expandEast(-amount);
+            case 'U' -> expandDown(-amount);
+            case 'D' -> expandUp(-amount);
             // All
             case 'A' -> {
                 expandNorth(-amount);
@@ -267,12 +235,10 @@ public class PlayerVariableManager {
                 contract(amount, dir);
             }
 
-            default -> {
-                PlayerUtils.sendPlayerMessageChat(
-                        Text.literal("Unknown direction: %s".formatted(direction))
-                                .withColor(GlobalColorRegistry.getBrightRed())
-                );
-            }
+            default -> PlayerUtils.sendPlayerMessageChat(
+                    Text.translatable("mod.generic.unknown_direction", direction)
+                            .withColor(GlobalColorRegistry.getBrightRed())
+            );
         }
     }
 

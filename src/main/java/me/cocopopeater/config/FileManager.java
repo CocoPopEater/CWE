@@ -8,7 +8,6 @@ import me.cocopopeater.regions.SchematicRegion;
 import me.cocopopeater.util.gsonadapters.SimpleBlockPosAdapter;
 import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import me.cocopopeater.util.PlayerUtils;
-import me.cocopopeater.util.varmanagers.PlayerVariableManager;
 import net.minecraft.text.Text;
 
 import java.io.*;
@@ -45,7 +44,7 @@ public class FileManager {
         file.mkdirs();
         if(!ensureFileExists(file)){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unable to load schematic list")
+                    Text.translatable("files.error.schematic_directory_missing")
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
             return new ArrayList<>();
@@ -61,18 +60,17 @@ public class FileManager {
             }
         } catch (SecurityException e) {
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unable to retrieve schematics")
+                    Text.translatable("files.error.insufficient_permission")
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
         }
-
         return fileNames;
     }
 
     public static void saveSchematic(SchematicRegion region, String schematicName){
         if(region == null){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                    Text.translatable("files.error.invalid_region")
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
             return;
@@ -82,7 +80,7 @@ public class FileManager {
 
         if(!ensureFileExists(file)){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                    Text.translatable("files.error.file_create_failed", schematicName)
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
             return;
@@ -92,19 +90,18 @@ public class FileManager {
             String data = gson.toJson(region);
             byte[] compressed = compress(data);
             fileOutputStream.write(compressed);
-            //gson.toJson(region, writer);
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Region saved as: %s".formatted(schematicName))
+                    Text.translatable("files.success.region_saved", schematicName)
                             .withColor(GlobalColorRegistry.getLimeGreen())
             );
         }catch(IOException e){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                    Text.translatable("files.error.ioexception", schematicName)
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
         } catch (Exception e) {
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Unable to save schematic: %s".formatted(schematicName))
+                    Text.translatable("files.error.exception", schematicName)
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
         }
@@ -114,7 +111,7 @@ public class FileManager {
         File file = new File("%s/%s.cschem".formatted(SCHEMATIC_DIRECTORY, schematicName));
         if(!file.exists()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("FNE: Unable to load schematic: %s from path: %s".formatted(schematicName, file.getPath()))
+                    Text.translatable("files.error.cannot_find_file", schematicName, file.getPath())
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
             return null;
@@ -132,13 +129,13 @@ public class FileManager {
 
         } catch (IOException e) {
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("IOE: Unable to load schematic: %s".formatted(schematicName))
+                    Text.translatable("files.error.ioexception", schematicName)
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
         } catch (Exception e) {
             e.printStackTrace();
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("E: Unable to load schematic: %s".formatted(schematicName))
+                    Text.translatable("files.error.exception", schematicName)
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
         }
@@ -162,7 +159,7 @@ public class FileManager {
             while ((length = inflaterInputStream.read(buffer)) != -1) {
                 byteArrayOutputStream.write(buffer, 0, length);
             }
-            return new String(byteArrayOutputStream.toByteArray());
+            return byteArrayOutputStream.toString();
         }
     }
 }

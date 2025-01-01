@@ -3,8 +3,6 @@ package me.cocopopeater.events;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.client.resource.language.I18n;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
 public class ChatSuppressor {
@@ -20,7 +18,6 @@ public class ChatSuppressor {
     }
 
     public static void register(){
-
         ClientReceiveMessageEvents.ALLOW_GAME.register((text, b) -> {
             for(String key : messageKeysToHide){
                 if(text.getString().equals(I18n.translate(key))){
