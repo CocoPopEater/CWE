@@ -1,8 +1,10 @@
 package me.cocopopeater.blocks;
 
 import me.cocopopeater.util.MathHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -34,6 +36,30 @@ public class Zone {
 
     public int getTotalVolume(){
         return MathHelper.getTotalVolume(point1, point2);
+    }
+
+    public List<Zone> getWallZones() {
+        SimpleBlockPos minPos = this.getMinPos(); // Minimum corner
+        SimpleBlockPos maxPos = this.getMaxPos(); // Maximum corner
+
+        SimpleBlockPos frontMin = new SimpleBlockPos(minPos.x(), minPos.y(), minPos.z());
+        SimpleBlockPos frontMax = new SimpleBlockPos(maxPos.x(), maxPos.y(), minPos.z());
+        Zone frontWall = new Zone(frontMin, frontMax);
+
+        SimpleBlockPos backMin = new SimpleBlockPos(minPos.x(), minPos.y(), maxPos.z());
+        SimpleBlockPos backMax = new SimpleBlockPos(maxPos.x(), maxPos.y(), maxPos.z());
+        Zone backWall = new Zone(backMin, backMax);
+
+        SimpleBlockPos leftMin = new SimpleBlockPos(minPos.x(), minPos.y(), minPos.z());
+        SimpleBlockPos leftMax = new SimpleBlockPos(minPos.x(), maxPos.y(), maxPos.z());
+        Zone leftWall = new Zone(leftMin, leftMax);
+
+        SimpleBlockPos rightMin = new SimpleBlockPos(maxPos.x(), minPos.y(), minPos.z());
+        SimpleBlockPos rightMax = new SimpleBlockPos(maxPos.x(), maxPos.y(), maxPos.z());
+        Zone rightWall = new Zone(rightMin, rightMax);
+
+
+        return Arrays.asList(frontWall, backWall, leftWall, rightWall);
     }
 
     public void markZonePoints(Set<SimpleBlockPos> storageSet){

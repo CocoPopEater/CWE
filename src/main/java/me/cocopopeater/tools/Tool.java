@@ -14,4 +14,5 @@ public abstract class Tool {
     }
 
     public abstract void applyEffect(BlockHitResult hitResult);
+    public abstract void resetTool(boolean messagePlayer);
 }

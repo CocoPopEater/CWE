@@ -10,4 +10,8 @@ public record SimpleBlockPos(int x, int y, int z) {
     public BlockPos toBlockPos(){
         return new BlockPos(this.x, this.y, this.z);
     }
+
+    public String toShortString() {
+        return this.x() + ", " + this.y() + ", " + this.z();
+    }
 }
