@@ -66,7 +66,7 @@ public class SchematicRegion extends CuboidRegion {
 
     private void cacheBlockData(ConcurrentMap<SimpleBlockPos, String> blockDataMap, World world){
         // cache block data for each position for easy checks later
-        if(ConfigHandler.getInstance().isParallelProcessing()){
+        if(ConfigHandler.getInstance().isParallelCaching()){
             for (int x = getMin().getX(); x <= getMax().getX(); x++) {
                 for (int y = getMin().getY(); y <= getMax().getY(); y++) {
                     for (int z = getMin().getZ(); z <= getMax().getZ(); z++) {

@@ -17,7 +17,7 @@
   "command.error.missing_argument": "Missing argument",
 
   "command.config.mod_status": "CWE is currently %1$s",
-  "command.config.parallel_processing_status": "Parallel processing is currently %1$s",
+  "command.config.parallel_caching_status": "Parallel caching is currently %1$s",
   "command.config.command_delay": "Current command delay: %1$s",
   "command.config.unknown_key": "Unknown config key: %1$s",
   "command.enable_mod.toggle": "CWE has been %1$s",
