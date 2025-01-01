@@ -20,7 +20,7 @@ public class TimedCommandRunner {
     }
 
     public void start(long interval, TimeUnit timeunit){
-        Text startMsg = Text.literal("Executing %d tasks...".formatted(tasks.size())).withColor(GlobalColorRegistry.getLimeGreen());
+        Text startMsg = Text.translatable("mod.generic.executing_tasks", tasks.size()).withColor(GlobalColorRegistry.getLimeGreen());
         PlayerUtils.sendPlayerMessageChat(
                 startMsg
         );
@@ -33,7 +33,7 @@ public class TimedCommandRunner {
                 }
             } else{
                 schedular.shutdown();
-                Text endMsg = Text.literal("Tasks Completed").withColor(GlobalColorRegistry.getLimeGreen());
+                Text endMsg = Text.translatable("mod.generic.completed_tasks").withColor(GlobalColorRegistry.getLimeGreen());
                 PlayerUtils.sendPlayerMessageChat(
                         endMsg
                 );

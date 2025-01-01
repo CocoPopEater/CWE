@@ -9,6 +9,7 @@ import me.cocopopeater.util.*;
 import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
@@ -40,9 +41,9 @@ public class ConfigCommand {
         String get_or_set = context.getArgument("operation", String.class);
         String config_option = context.getArgument("configOption", String.class);
 
-        if(get_or_set.toLowerCase().equals("get")){
+        if(get_or_set.equalsIgnoreCase("get")){
             handleConfigGet(config_option);
-        }else if(get_or_set.toLowerCase().equals("set")){
+        }else if(get_or_set.equalsIgnoreCase("set")){
             String value = context.getArgument("value", String.class);
             if(value == null || value.isEmpty()){
                 PlayerUtils.sendPlayerMessageChat(
@@ -53,7 +54,7 @@ public class ConfigCommand {
             handleConfigSet(config_option, value);
         }else{
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Invalid operation string: %s".formatted(get_or_set))
+                    Text.translatable("command.error.invalid_argument", get_or_set)
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
@@ -68,11 +69,11 @@ public class ConfigCommand {
                 boolean enabled = ConfigHandler.getInstance().isEnabled();
                 int rgbColor = enabled ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
 
-                Text part1 = Text.literal("CWE is currently: ");
-                Text part2 = Text.literal(enabled ? "activated" : "deactivated")
-                        .withColor(rgbColor);
 
-                Text message = part1.copy().append(part2);
+                Text message = Text.translatable("command.config.mod_status",
+                        Text.translatable(enabled ? "mod.generic.activated" : "mod.generic.deactivated")
+                                .setStyle(Style.EMPTY).withColor(rgbColor));
+
                 PlayerUtils.sendPlayerMessageChat(
                         message
                 );
@@ -81,11 +82,11 @@ public class ConfigCommand {
                 boolean isParallelProcessing = ConfigHandler.getInstance().isParallelProcessing();
                 int rgbColor = isParallelProcessing ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
 
-                Text part1 = Text.literal("Parallel Processing is currently: ");
-                Text part2 = Text.literal(isParallelProcessing ? "enabled" : "disabled")
-                        .withColor(rgbColor);
+                Text message = Text.translatable("command.config.parallel_processing_status",
+                        Text.translatable(isParallelProcessing ? "mod.generic.activated" : "mod.generic.deactivated")
+                                .setStyle(Style.EMPTY).withColor(rgbColor));
 
-                Text message = part1.copy().append(part2);
+
                 PlayerUtils.sendPlayerMessageChat(
                         message
                 );
@@ -93,19 +94,15 @@ public class ConfigCommand {
             case "command-delay" -> {
                 int delay = ConfigHandler.getInstance().getCommandDelay();
 
-                Text part1 = Text.literal("Current command delay: ");
-                Text part2 = Text.literal("%d ms".formatted(delay)).withColor(GlobalColorRegistry.getLimeGreen());
-
-                Text message = part1.copy().append(part2);
+                Text message = Text.translatable("command.config.command_delay",
+                        Text.literal("%d ms".formatted(delay)).withColor(GlobalColorRegistry.getLimeGreen()));
                 PlayerUtils.sendPlayerMessageChat(
                         message
                 );
             }
-            default -> {
-                PlayerUtils.sendPlayerMessageChat(
-                        Text.literal("Unknown config key: %s".formatted(configOption))
-                );
-            }
+            default -> PlayerUtils.sendPlayerMessageChat(
+                    Text.translatable("command.config.unknown_key", configOption)
+            );
         }
     }
 
@@ -113,13 +110,13 @@ public class ConfigCommand {
         switch(configOption.toLowerCase()){
             case "enabled" -> {
                 boolean flag;
-                if(value.toLowerCase().equals("true")) {
+                if(value.equalsIgnoreCase("true")) {
                     flag = true;
-                }else if (value.toLowerCase().equals("false")){
+                }else if (value.equalsIgnoreCase("false")){
                     flag = false;
                 }else{
                     PlayerUtils.sendPlayerMessageChat(
-                            Text.literal("Invalid boolean flag: %s".formatted(value)).withColor(GlobalColorRegistry.getBrightRed())
+                            Text.translatable("mod.generic.invalid_boolean", value).withColor(GlobalColorRegistry.getBrightRed())
                     );
                     return;
                 }
@@ -128,24 +125,23 @@ public class ConfigCommand {
                 boolean enabled = ConfigHandler.getInstance().isEnabled();
                 int rgbColor = enabled ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
 
-                Text part1 = Text.literal("CWE is currently: ");
-                Text part2 = Text.literal(enabled ? "activated" : "deactivated")
-                        .withColor(rgbColor);
+                Text message = Text.translatable("command.config.mod_status",
+                        Text.translatable(enabled ? "mod.generic.activated" : "mod.generic.deactivated")
+                                .setStyle(Style.EMPTY).withColor(rgbColor));
 
-                Text message = part1.copy().append(part2);
                 PlayerUtils.sendPlayerMessageChat(
                         message
                 );
             }
             case "parallel-processing" -> {
                 boolean flag;
-                if(value.toLowerCase().equals("true")) {
+                if(value.equalsIgnoreCase("true")) {
                     flag = true;
-                }else if (value.toLowerCase().equals("false")){
+                }else if (value.equalsIgnoreCase("false")){
                     flag = false;
                 }else{
                     PlayerUtils.sendPlayerMessageChat(
-                            Text.literal("Invalid boolean flag: %s".formatted(value)).withColor(GlobalColorRegistry.getBrightRed())
+                            Text.translatable("mod.generic.invalid_boolean", value).withColor(GlobalColorRegistry.getBrightRed())
                     );
                     return;
                 }
@@ -154,11 +150,10 @@ public class ConfigCommand {
                 boolean isParallelProcessing = ConfigHandler.getInstance().isParallelProcessing();
                 int rgbColor = isParallelProcessing ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
 
-                Text part1 = Text.literal("Parallel Processing is currently: ");
-                Text part2 = Text.literal(isParallelProcessing ? "enabled" : "disabled")
-                        .withColor(rgbColor);
+                Text message = Text.translatable("command.config.parallel_processing_status",
+                        Text.translatable(isParallelProcessing ? "mod.generic.activated" : "mod.generic.deactivated")
+                                .setStyle(Style.EMPTY).withColor(rgbColor));
 
-                Text message = part1.copy().append(part2);
                 PlayerUtils.sendPlayerMessageChat(
                         message
                 );
@@ -169,7 +164,7 @@ public class ConfigCommand {
                    newDelay = Integer.parseInt(value);
                 } catch (NumberFormatException e) {
                     PlayerUtils.sendPlayerMessageChat(
-                            Text.literal("Invalid integer input: %s".formatted(value))
+                            Text.translatable("mod.generic.invalid_integer", value)
                     );
                     return;
                 }

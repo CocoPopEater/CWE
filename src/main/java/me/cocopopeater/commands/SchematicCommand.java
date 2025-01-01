@@ -24,13 +24,12 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.lit
 public class SchematicCommand {
 
     private static SuggestionProvider<FabricClientCommandSource> generateSchematicList(){
-        SuggestionProvider<FabricClientCommandSource> OPTION_SUGGESTIONS = (context, builder) -> {
+        return (context, builder) -> {
             builder.suggest("list");
             builder.suggest("save");
             builder.suggest("load");
             return builder.buildFuture();
         };
-        return OPTION_SUGGESTIONS;
     }
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess){
@@ -44,7 +43,7 @@ public class SchematicCommand {
     public static int runList(CommandContext<FabricClientCommandSource> context){
         if(!ConfigHandler.getInstance().isEnabled()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("The mod is not enabled").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
@@ -52,13 +51,13 @@ public class SchematicCommand {
 
         if(!(option.equalsIgnoreCase("list"))){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("Missing argument")
+                    Text.translatable("command.error.missing_argument")
             );
             return 0;
         }
         List<String> schematicList = FileManager.getSchematicList();
         StringBuilder sb = new StringBuilder();
-        sb.append("Saved Schematics:");
+        sb.append(Text.translatable("mod.ui.saved_schematics").getString());
         sb.append("\n");
         for(String s : schematicList){
             sb.append(s);
@@ -74,7 +73,7 @@ public class SchematicCommand {
     public static int runSchematic(CommandContext<FabricClientCommandSource> context){
         if(!ConfigHandler.getInstance().isEnabled()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("The mod is not enabled").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
@@ -86,34 +85,30 @@ public class SchematicCommand {
         }else {
             if(schematicName == null || schematicName.isEmpty()){
                 PlayerUtils.sendPlayerMessageChat(
-                        Text.literal("Please specify schematic name").withColor(GlobalColorRegistry.getBrightRed())
+                        Text.translatable("command.schematic.specify_schematic_name").withColor(GlobalColorRegistry.getBrightRed())
                 );
                 return 0;
             }
             if(option.equalsIgnoreCase("save")){
                 if(PlayerVariableManager.getPos1() == null || PlayerVariableManager.getPos2() == null){
                     PlayerUtils.sendPlayerMessageChat(
-                            Text.literal("You need to set the region positions").withColor(GlobalColorRegistry.getBrightRed())
+                            Text.translatable("region.positions_required").withColor(GlobalColorRegistry.getBrightRed())
                     );
                     return 0;
                 }
-                CompletableFuture.supplyAsync(() ->{
-                    return PlayerVariableManager.createSchematicRegion();
-                }).thenAcceptAsync(region -> {
-                    FileManager.saveSchematic(region, schematicName);
-                });
+                CompletableFuture.supplyAsync(() -> PlayerVariableManager.createSchematicRegion()).thenAcceptAsync(region -> FileManager.saveSchematic(region, schematicName));
                 return 1;
             } else if(option.equalsIgnoreCase("load")){
                 CompletableFuture<SchematicRegion> future = CompletableFuture.supplyAsync(() -> FileManager.loadSchematic(schematicName));
                 future.thenAccept(region -> {
                     if(region == null){
                         PlayerUtils.sendPlayerMessageChat(
-                                Text.literal("Invalid schematic").withColor(GlobalColorRegistry.getBrightRed())
+                                Text.translatable("command.schematic.invalid_schematic").withColor(GlobalColorRegistry.getBrightRed())
                         );
                     }else{
                         PlayerVariableManager.setSchematicRegion(region);
                         PlayerUtils.sendPlayerMessageChat(
-                                Text.literal("Successfully loaded schematic: %s".formatted(schematicName))
+                                Text.translatable("command.schematic.schematic_loaded", schematicName)
                                         .withColor(GlobalColorRegistry.getLimeGreen())
                         );
                     }
@@ -121,7 +116,7 @@ public class SchematicCommand {
 
             }else{
                 PlayerUtils.sendPlayerMessageChat(
-                        Text.literal("Unknown argument: %s".formatted(option)).withColor(GlobalColorRegistry.getBrightRed())
+                        Text.translatable("command.error.invalid_argument", option).withColor(GlobalColorRegistry.getBrightRed())
                 );
             }
         }

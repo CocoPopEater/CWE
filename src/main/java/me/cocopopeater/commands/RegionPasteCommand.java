@@ -22,17 +22,13 @@ public class RegionPasteCommand {
     public static int run(CommandContext<FabricClientCommandSource> context){
         if(!ConfigHandler.getInstance().isEnabled()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("The mod is not enabled").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
-        FabricClientCommandSource source = context.getSource();
-
-
-
         if(!BlockUtils.canSetBlocks()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("You dont have permission to perform this command")
+                    Text.translatable("mod.generic.insufficient_permission")
                             .withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
@@ -41,7 +37,7 @@ public class RegionPasteCommand {
         SchematicRegion clipboardRegion = PlayerVariableManager.getSchematicRegion();
         if(clipboardRegion == null){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("You do not have a region copied").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("region.no_region_copied").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }

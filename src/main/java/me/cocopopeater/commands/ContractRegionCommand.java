@@ -35,7 +35,7 @@ public class ContractRegionCommand {
     public static int runNoQty(CommandContext<FabricClientCommandSource> context){
         if(!ConfigHandler.getInstance().isEnabled()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("The mod is not enabled").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
@@ -47,7 +47,7 @@ public class ContractRegionCommand {
 
         int blockCountDiff = Math.abs(start.getTotalBlocks() - end.getTotalBlocks());
 
-        Text msg = Text.literal("Region contracted %d blocks".formatted(blockCountDiff)).withColor(GlobalColorRegistry.getLimeGreen());
+        Text msg = Text.translatable("command.contract_region.contracted", blockCountDiff).withColor(GlobalColorRegistry.getLimeGreen());
         PlayerUtils.sendPlayerMessageChat(msg);
 
         return 1;
@@ -56,7 +56,7 @@ public class ContractRegionCommand {
     public static int run(CommandContext<FabricClientCommandSource> context){
         if(!ConfigHandler.getInstance().isEnabled()){
             PlayerUtils.sendPlayerMessageChat(
-                    Text.literal("The mod is not enabled").withColor(GlobalColorRegistry.getBrightRed())
+                    Text.translatable("mod.status.not_enabled").withColor(GlobalColorRegistry.getBrightRed())
             );
             return 0;
         }
@@ -69,7 +69,7 @@ public class ContractRegionCommand {
 
         int blockCountDiff = Math.abs(start.getTotalBlocks() - end.getTotalBlocks());
 
-        Text msg = Text.literal("Region contracted %d blocks".formatted(blockCountDiff)).withColor(GlobalColorRegistry.getLimeGreen());
+        Text msg = Text.translatable("command.contract_region.contracted", blockCountDiff).withColor(GlobalColorRegistry.getLimeGreen());
         PlayerUtils.sendPlayerMessageChat(msg);
 
         return 1;

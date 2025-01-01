@@ -23,11 +23,11 @@ public class EnableModCommand {
 
         int rgbColor = enabled ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
 
-        Text part1 = Text.literal("CWE has been ");
-        Text part2 = Text.literal(enabled ? "activated" : "deactivated")
-                .setStyle(Style.EMPTY.withColor(rgbColor));
-
-        Text message = part1.copy().append(part2);
+        Text message = Text.translatable(
+                "command.enable_mod.toggle",
+                Text.translatable(enabled ? "mod.generic.activated" : "mod.generic.deactivated")
+                        .setStyle(Style.EMPTY.withColor(rgbColor))
+        );
         context.getSource().sendFeedback(message);
         return 1;
     }
