@@ -24,7 +24,7 @@ public class ConfigCommand {
 
     private static final SuggestionProvider<FabricClientCommandSource> OPTION_SUGGESTIONS = (context, builder) -> {
         builder.suggest("enabled");
-        builder.suggest("parallel-processing");
+        builder.suggest("parallel-caching");
         builder.suggest("command-delay");
         return builder.buildFuture();
     };
@@ -78,12 +78,12 @@ public class ConfigCommand {
                         message
                 );
             }
-            case "parallel-processing" -> {
-                boolean isParallelProcessing = ConfigHandler.getInstance().isParallelProcessing();
-                int rgbColor = isParallelProcessing ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
+            case "parallel-caching" -> {
+                boolean isParallelCaching = ConfigHandler.getInstance().isParallelCaching();
+                int rgbColor = isParallelCaching ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
 
-                Text message = Text.translatable("command.config.parallel_processing_status",
-                        Text.translatable(isParallelProcessing ? "mod.generic.activated" : "mod.generic.deactivated")
+                Text message = Text.translatable("command.config.parallel_caching_status",
+                        Text.translatable(isParallelCaching ? "mod.generic.activated" : "mod.generic.deactivated")
                                 .setStyle(Style.EMPTY).withColor(rgbColor));
 
 
@@ -145,12 +145,12 @@ public class ConfigCommand {
                     );
                     return;
                 }
-                ConfigHandler.getInstance().setParallelProcessing(flag);
+                ConfigHandler.getInstance().setParallelCaching(flag);
 
-                boolean isParallelProcessing = ConfigHandler.getInstance().isParallelProcessing();
+                boolean isParallelProcessing = ConfigHandler.getInstance().isParallelCaching();
                 int rgbColor = isParallelProcessing ? GlobalColorRegistry.getLimeGreen() : GlobalColorRegistry.getBrightRed();
 
-                Text message = Text.translatable("command.config.parallel_processing_status",
+                Text message = Text.translatable("command.config.parallel_caching_status",
                         Text.translatable(isParallelProcessing ? "mod.generic.activated" : "mod.generic.deactivated")
                                 .setStyle(Style.EMPTY).withColor(rgbColor));
 
