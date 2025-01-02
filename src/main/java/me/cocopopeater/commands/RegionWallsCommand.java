@@ -3,9 +3,13 @@ package me.cocopopeater.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import me.cocopopeater.blocks.BlockZone;
+import me.cocopopeater.blocks.SimpleBlockPos;
+import me.cocopopeater.blocks.Zone;
 import me.cocopopeater.config.ConfigHandler;
 import me.cocopopeater.regions.CuboidRegion;
-import me.cocopopeater.util.*;
+import me.cocopopeater.util.BlockUtils;
+import me.cocopopeater.util.PlayerUtils;
 import me.cocopopeater.util.varmanagers.GlobalColorRegistry;
 import me.cocopopeater.util.varmanagers.PlayerVariableManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -20,11 +24,11 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.arg
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 import static net.minecraft.registry.Registries.BLOCK;
 
-public class SetRegionCommand {
+public class RegionWallsCommand {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess) {
-        dispatcher.register(literal("/set")
+        dispatcher.register(literal("/walls")
                 .then(argument("block", StringArgumentType.greedyString()
-                ).executes(SetRegionCommand::run)));
+                ).executes(RegionWallsCommand::run)));
     }
 
     public static int run(CommandContext<FabricClientCommandSource> context){
@@ -54,10 +58,15 @@ public class SetRegionCommand {
 
         CuboidRegion master = PlayerVariableManager.getCuboid();
 
-        List<String> commands = new ArrayList<>();
+        BlockZone zone = new BlockZone(SimpleBlockPos.fromBlockPos(
+                master.getMin()),
+                SimpleBlockPos.fromBlockPos(master.getMax()),
+                blockName
+        );
 
-        for(CuboidRegion subRegion : master.separateRegion()){
-            commands.add(subRegion.getFillCommand(blockName));
+        List<String> commands = new ArrayList<>();
+        for(BlockZone wallZone : zone.getWallBlockZones()){
+            commands.addAll(wallZone.generateFillCommandsRaw());
         }
 
         PlayerUtils.sendCommandList(commands);
