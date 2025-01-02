@@ -6,7 +6,10 @@ import java.util.List;
 
 public enum ToolType {
     NONE,
-    TREE;
+    TREE,
+    REPLACER,
+    FILL,
+    WALL;
 
 
     public static List<String> getTools(){

@@ -87,7 +87,7 @@ public class ToolsCommand {
         String choice = context.getArgument("tool-name", String.class).toLowerCase();
         String itemName = context.getSource().getPlayer().getMainHandStack().getItem().getName().getString();
 
-        if(choice.equals("unbind")){
+        if(choice.equalsIgnoreCase("unbind") || choice.equalsIgnoreCase("none")){
             PlayerVariableManager.unbindTool(itemName);
             return 1;
         }

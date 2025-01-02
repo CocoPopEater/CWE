@@ -7,29 +7,26 @@ import me.cocopopeater.tools.TreeType;
 import me.cocopopeater.util.PlayerUtils;
 import net.minecraft.util.hit.BlockHitResult;
 
-public class TreeTool extends Tool {
-    private TreeType treeType;
+public class ReplacerTool extends Tool {
+    private String blockData;
 
-    public TreeTool(){
-        super(ToolType.TREE);
+    public ReplacerTool(){
+        super(ToolType.REPLACER);
     }
 
-    public void setTreeType(TreeType type){
-        this.treeType = type;
+    public void setBlockData(String data){
+        this.blockData = data;
     }
 
     @Override
     public void applyEffect(BlockHitResult hitResult) {
-        // if selected tree is random, get random tree
-        // otherwise create string representation of currently selected tree type
-        String tree = treeType.equals(TreeType.RANDOM) ? TreeType.getRandomTree().toString() : treeType.toString();
         SimpleBlockPos pos = SimpleBlockPos.fromBlockPos(hitResult.getBlockPos());
-        String command = "place feature %s %d %d %d".formatted(
-                tree,
+        String command = "setblock %d %d %d %s".formatted(
                 pos.x(),
-                pos.y() + 1,
-                pos.z()
-        ).toLowerCase();
+                pos.y(),
+                pos.z(),
+                this.blockData
+        );
         PlayerUtils.sendCommandAsPlayer(
                 command
         );

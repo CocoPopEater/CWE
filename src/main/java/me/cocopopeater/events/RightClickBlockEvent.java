@@ -26,8 +26,7 @@ public class RightClickBlockEvent {
         if(!(PlayerVariableManager.getTool(itemName) == null)){
             // The user has bound a tool to the currently held item
             Tool tool = PlayerVariableManager.getTool(itemName);
-            if(!(tool instanceof TreeTool treeTool)) return ActionResult.PASS;
-            treeTool.applyEffect(hitResult);
+            tool.applyEffect(hitResult);
             return ActionResult.FAIL;
         }
 

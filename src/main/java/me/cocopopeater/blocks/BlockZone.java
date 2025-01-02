@@ -7,8 +7,10 @@ import me.cocopopeater.util.varmanagers.GlobalVariableManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +37,15 @@ public class BlockZone extends Zone{
 
     public void paste(){
         PlayerUtils.sendCommandList(this.generateFillCommands());
+    }
+
+
+    public List<BlockZone> getWallBlockZones(){
+        List<BlockZone> blockZones = new ArrayList<>();
+        for(Zone zone : this.getWallZones()){
+            blockZones.add(new BlockZone(zone, this.blockData));
+        }
+        return blockZones;
     }
 
 
@@ -85,6 +96,41 @@ public class BlockZone extends Zone{
         }
 
         return subRegions;
+    }
+
+    public List<String> generateFillCommandsRaw(){
+        ArrayList<String> commands = new ArrayList<>();
+        int totalVolume = getTotalVolume();
+        ClientPlayerEntity player = MinecraftClient.getInstance().player; // get players current position
+
+        if(totalVolume < GlobalVariableManager.MAX_BLOCKS){
+            commands.add(
+                    "fill %d %d %d %d %d %d %s".formatted(
+                            this.point1.x(),
+                            this.point1.y(),
+                            this.point1.z(),
+                            this.point2.x(),
+                            this.point2.y(),
+                            this.point2.z(),
+                            this.blockData
+                    )
+            );
+            return commands;
+        }
+        for(BlockZone zone : this.subdivide()){
+            commands.add(
+                    "fill %d %d %d %d %d %d %s".formatted(
+                            zone.point1.x(),
+                            zone.point1.y(),
+                            zone.point1.z(),
+                            zone.point2.x(),
+                            zone.point2.y(),
+                            zone.point2.z(),
+                            zone.blockData
+                    )
+            );
+        }
+        return commands;
     }
 
     public List<String> generateFillCommands(){

@@ -36,6 +36,8 @@
   "region.selection.position1": "First position set to: (%1$s)",
   "region.selection.position2": "Second position set to: (%1$s)",
 
+  "tools.tool_reset": "Tool reset",
+
   "files.error.schematic_directory_missing": "Unable to find schematic directory",
   "files.error.insufficient_permission": "Insufficient file permissions",
   "files.error.invalid_region": "Failed to save region: Invalid Region",

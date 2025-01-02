@@ -25,7 +25,6 @@ public class PlayerVariableManager {
 
     public static void bindTool(String itemName, ToolType newTool, String optionalInfo){
         toolMap.put(itemName, ToolFactory.createTool(newTool, optionalInfo));
-
     }
     public static void unbindTool(String itemName){
         toolMap.remove(itemName);
